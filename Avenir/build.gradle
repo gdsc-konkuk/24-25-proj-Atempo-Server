@@ -37,9 +37,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'com.google.cloud:spring-cloud-gcp-starter'
-	implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
+//	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+//	implementation 'com.google.cloud:spring-cloud-gcp-starter'
+//	implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -53,8 +53,8 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+//		mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
+//		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
 
