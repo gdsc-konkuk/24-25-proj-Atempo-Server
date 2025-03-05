@@ -1,0 +1,15 @@
+server:
+  port: 8090
+
+#spring:
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-name: google
+#            client-id:
+#            client-secret:
+#            redirect-uri: http://localhost:8080/login/oauth2/code/google
+#            authorization-grant-type: authorization_code
+#            scope: profile,email
