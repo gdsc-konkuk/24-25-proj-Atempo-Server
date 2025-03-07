@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AvenirApplication {
 
 	public static void main(String[] args) {
-		System.out.println("hello Avenir!");
+		System.out.println("hello Avenir! 2");
 		SpringApplication.run(AvenirApplication.class, args);
 	}
 
