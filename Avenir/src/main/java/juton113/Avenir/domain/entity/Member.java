@@ -33,7 +33,7 @@ public class Member {
     @Column(nullable = false)
     String email;
 
-    @Column
+    @Column(nullable = false)
     String profileUrl;
 
     @Enumerated(EnumType.STRING)
