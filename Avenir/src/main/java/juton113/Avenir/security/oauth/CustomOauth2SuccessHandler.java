@@ -3,7 +3,8 @@ package juton113.Avenir.security.oauth;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import juton113.Avenir.domain.dto.TokenResponseDto;
+import juton113.Avenir.domain.dto.AccessTokenDto;
+import juton113.Avenir.domain.dto.RefreshTokenDto;
 import juton113.Avenir.service.AuthService;
 import juton113.Avenir.service.MemberService;
 import lombok.AllArgsConstructor;
@@ -24,14 +25,13 @@ public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = (String) oAuth2User.getAttributes().get("email");
-        Long memberId = memberService.findMemberByEmail(email).getMemberId();
+        String memberId = String.valueOf(memberService.findMemberByEmail(email).getMemberId());
 
-        TokenResponseDto tokenResponseDto = authService.issueToken(String.valueOf(memberId));
-        String accessToken = tokenResponseDto.getAccessToken();
-        String refreshToken = tokenResponseDto.getRefreshToken();
+        AccessTokenDto accessTokenDto = authService.issueAccessToken(memberId);
+        RefreshTokenDto refreshTokenDto = authService.issueRefreshToken(memberId);
 
-        response.setHeader("Authorization", "Bearer " + accessToken);
-        response.setHeader("X-Refresh-Token", "Bearer " + refreshToken);
+        response.setHeader("Authorization", "Bearer " + accessTokenDto.getAccessToken());
+        response.setHeader("X-Refresh-Token", "Bearer " + refreshTokenDto.getRefreshToken());
 
         response.setStatus(HttpServletResponse.SC_OK);
 

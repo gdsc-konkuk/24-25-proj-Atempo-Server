@@ -36,7 +36,8 @@ public class SecurityConfig {
                         .disable()
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "api/v1/auth/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/", "/index.html", "api/v1/auth/**", "/h2-console/**",
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 // -----[start: h2 console]------

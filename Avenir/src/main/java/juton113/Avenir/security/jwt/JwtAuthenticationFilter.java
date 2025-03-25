@@ -24,14 +24,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = tokenService.resolveToken(request, TokenType.ACCESS);
+        String token = tokenService.resolveToken(request);
 
-        if(accessToken != null) {
-            Claims claims = tokenService.parseToken(accessToken);
+        if(token != null) {
+            Claims claims = tokenService.parseToken(token);
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (claims.get("tokenType").equals(TokenType.ACCESS.toString())) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
         filterChain.doFilter(request, response);
     }
