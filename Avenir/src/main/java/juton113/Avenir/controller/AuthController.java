@@ -2,16 +2,12 @@ package juton113.Avenir.controller;
 
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.headers.Header;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import juton113.Avenir.domain.dto.AccessTokenDto;
 import juton113.Avenir.domain.dto.LoginResponseDto;
 import juton113.Avenir.domain.dto.RefreshTokenDto;
-import juton113.Avenir.domain.dto.TokenResponseDto;
-import juton113.Avenir.domain.enums.TokenType;
 import juton113.Avenir.security.jwt.TokenService;
 import juton113.Avenir.service.AuthService;
 import juton113.Avenir.service.RedisService;
@@ -25,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-import static juton113.Avenir.domain.enums.TokenType.ACCESS;
 import static juton113.Avenir.domain.enums.TokenType.REFRESH;
 
 @Tag(name = "인증, 인가", description = "로그인, 토큰 발급과 관련된 API")
@@ -46,23 +41,9 @@ public class AuthController {
         return ResponseEntity.ok(new LoginResponseDto("OAuth 로그인 URL 반환", loginUrl));
     }
 
-    @Operation(security = @SecurityRequirement(name = "Refresh Token Auth"),
-            summary = "토큰 재발급",
-            description = "Access Token과 Refresh Token 재발급",
-            responses = {
-                    @ApiResponse(
-                            headers = {
-                                    @Header(
-                                            name = "Authorization",
-                                            schema = @io.swagger.v3.oas.annotations.media.Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...")
-                                    ),
-                                    @Header(
-                                            name = "X-Refresh-Token",
-                                            schema = @io.swagger.v3.oas.annotations.media.Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...")
-                                    )
-                            }
-                    )
-            }
+    @Operation(security = @SecurityRequirement(name = "JWT Auth"),
+            summary = "Access 토큰 발급",
+            description = "Refresh 토큰을 Authorization: Bearer edy7esvas... 형태로 제출하여 Access Token을 발급 받는다."
     )
     @PostMapping("/access-token")
     public ResponseEntity<?> reissueAccessToken(HttpServletRequest request) {
@@ -95,6 +76,10 @@ public class AuthController {
                 .body("Access Token reissued");
     }
 
+    @Operation(security = @SecurityRequirement(name = "JWT Auth"),
+            summary = "Refresh 토큰 발급",
+            description = "Refresh 토큰을 Authorization: Bearer edy7esvas... 형태로 제출하여 Refresh Token을 발급 받는다."
+    )
     @PostMapping("/refresh-token")
     public ResponseEntity<?> reissueRefreshToken(HttpServletRequest request) {
         String refreshToken = tokenService.resolveToken(request);
