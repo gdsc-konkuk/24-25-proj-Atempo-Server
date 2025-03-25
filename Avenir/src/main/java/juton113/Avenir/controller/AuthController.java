@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import juton113.Avenir.domain.dto.AccessTokenDto;
 import juton113.Avenir.domain.dto.LoginResponseDto;
 import juton113.Avenir.domain.dto.RefreshTokenDto;
+import juton113.Avenir.domain.enums.TokenType;
 import juton113.Avenir.security.jwt.TokenService;
 import juton113.Avenir.service.AuthService;
 import juton113.Avenir.service.RedisService;
@@ -26,7 +27,7 @@ import static juton113.Avenir.domain.enums.TokenType.REFRESH;
 @Tag(name = "인증, 인가", description = "로그인, 토큰 발급과 관련된 API")
 @AllArgsConstructor
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
     private final AuthService authService;
     private final RedisService redisService;
@@ -56,7 +57,7 @@ public class AuthController {
 
         Claims claims = tokenService.parseToken(refreshToken);
 
-        if (claims.get("tokenType") != REFRESH) {
+        if (!claims.get("tokenType").equals(TokenType.REFRESH.toString())) {
             // TODO: tokenService.resolveToken 내에 예외 처리 로직 작성 후 지울 것
             return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid Token - Different");
         }
@@ -91,7 +92,7 @@ public class AuthController {
 
         Claims claims = tokenService.parseToken(refreshToken);
 
-        if (claims.get("tokenType") != REFRESH) {
+        if (!claims.get("tokenType").equals(TokenType.REFRESH.toString())) {
             // TODO: tokenService.resolveToken 내에 예외 처리 로직 작성 후 지울 것
             return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid Token - Different");
         }
