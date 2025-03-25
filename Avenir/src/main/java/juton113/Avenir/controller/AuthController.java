@@ -2,6 +2,9 @@ package juton113.Avenir.controller;
 
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import juton113.Avenir.domain.dto.LoginResponseDto;
@@ -29,7 +32,8 @@ public class AuthController {
     private final RedisService redisService;
     private final TokenService tokenService;
 
-    @Operation(summary = "로그인 요청", description = "Oauth 로그인 url 요청")
+    @Operation(summary = "로그인 요청",
+            description = "Oauth 로그인 url 요청")
     @GetMapping("/login")
     public ResponseEntity<LoginResponseDto> login() {
         String loginUrl = "/oauth2/authorization/google";
@@ -37,7 +41,24 @@ public class AuthController {
         return ResponseEntity.ok(new LoginResponseDto("OAuth 로그인 URL 반환", loginUrl));
     }
 
-    @Operation(summary = "토큰 재발급", description = "Access Token과 Refresh Token을 재발급")
+    @Operation(security = @SecurityRequirement(name = "Refresh Token Auth"),
+            summary = "토큰 재발급",
+            description = "Access Token과 Refresh Token 재발급",
+            responses = {
+                    @ApiResponse(
+                            headers = {
+                                    @Header(
+                                            name = "Authorization",
+                                            schema = @io.swagger.v3.oas.annotations.media.Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...")
+                                    ),
+                                    @Header(
+                                            name = "X-Refresh-Token",
+                                            schema = @io.swagger.v3.oas.annotations.media.Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...")
+                                    )
+                            }
+                    )
+            }
+    )
     @PostMapping("/reissue")
     public ResponseEntity<?> reissueToken(HttpServletRequest request) {
         String refreshToken = tokenService.resolveToken(request, TokenType.REFRESH);
