@@ -60,8 +60,8 @@ public class TokenService {
                 .getBody();
     }
 
-    public String resolveToken(HttpServletRequest request, TokenType tokenType) {
-        String bearerToken = tokenType == TokenType.ACCESS ? request.getHeader("Authorization") : request.getHeader("X-Refresh-Token");
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
         return  (bearerToken != null && bearerToken.startsWith("Bearer ")) ? bearerToken.substring(7) : null;
     }
 }
