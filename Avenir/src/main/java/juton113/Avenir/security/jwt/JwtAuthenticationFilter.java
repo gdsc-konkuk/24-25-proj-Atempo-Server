@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import juton113.Avenir.domain.enums.TokenType;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,8 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
-import static juton113.Avenir.domain.enums.TokenType.ACCESS;
 
 @Component
 @AllArgsConstructor
@@ -30,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(token != null) {
             Claims claims = tokenService.parseToken(token);
 
-            if (claims.get("tokenType") == ACCESS) {
+            if (claims.get("tokenType").equals(TokenType.ACCESS.toString())) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
