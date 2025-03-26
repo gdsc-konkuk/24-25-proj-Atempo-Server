@@ -6,7 +6,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import juton113.Avenir.domain.enums.ErrorCode;
 import juton113.Avenir.domain.enums.TokenType;
+import juton113.Avenir.exception.CustomException;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -62,7 +64,19 @@ public class TokenService {
 
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        return  (bearerToken != null && bearerToken.startsWith("Bearer ")) ? bearerToken.substring(7) : null;
+
+        if (bearerToken == null) {
+            throw new CustomException(ErrorCode.AUTH_HEADER_MISSING);
+        } else if (!bearerToken.startsWith("Bearer ")) {
+            throw new CustomException(ErrorCode.INVALID_AUTH_HEADER_FORMAT);
+        }
+
+        return bearerToken.substring(7);
+    }
+
+    public void validateTokenType(Claims claims, TokenType expectedTokenType) {
+        if (!claims.get("tokenType").equals(expectedTokenType.toString()))
+            throw new CustomException(ErrorCode.INVALID_TOKEN_TYPE);
     }
 }
 
