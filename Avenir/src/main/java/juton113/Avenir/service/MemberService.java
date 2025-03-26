@@ -2,7 +2,9 @@ package juton113.Avenir.service;
 
 import juton113.Avenir.domain.dto.CreateMemberDto;
 import juton113.Avenir.domain.entity.Member;
+import juton113.Avenir.domain.enums.ErrorCode;
 import juton113.Avenir.domain.enums.Role;
+import juton113.Avenir.exception.CustomException;
 import juton113.Avenir.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,12 +36,10 @@ public class MemberService {
     }
 
     public Member findMemberByEmail(String email) {
-        // TODO: 예외 처리 할 것
-        return memberRepository.findByEmail(email).orElseThrow();
+        return memberRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     public Member findByMemberId(Long memberId) {
-        // TODO: 예외 처리 할 것
-        return memberRepository.findById(memberId).orElseThrow();
+        return memberRepository.findById(memberId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 }
