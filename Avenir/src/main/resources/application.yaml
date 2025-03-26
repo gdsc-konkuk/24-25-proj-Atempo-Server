@@ -32,9 +32,20 @@ spring:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
+
 jwt:
   secret: ${JWT_SECRET}
   access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
   refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+
 origin:
   fe: ${FE_URL}
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT}
+    org.springframework: ${LOG_LEVEL_SPRING}
+    jution113.Avenir: ${LOG_LEVEL_APP}
+
+  file:
+    name: logs/app.log
