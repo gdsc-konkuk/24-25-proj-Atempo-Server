@@ -5,7 +5,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import juton113.Avenir.domain.enums.ErrorCode;
 import juton113.Avenir.domain.enums.TokenType;
+import juton113.Avenir.exception.CustomException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = tokenService.resolveToken(request);
+        String token = resolveToken(request);
 
         if(token != null) {
             Claims claims = tokenService.parseToken(token);
@@ -36,5 +38,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+
+        if (bearerToken == null) {
+            return null;
+        } else if (!bearerToken.startsWith("Bearer ")) {
+            throw new CustomException(ErrorCode.INVALID_AUTH_HEADER_FORMAT);
+        }
+
+        return bearerToken.substring(7);
     }
 }
