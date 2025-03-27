@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
 import juton113.Avenir.domain.enums.ErrorCode;
 import juton113.Avenir.domain.enums.TokenType;
 import juton113.Avenir.exception.CustomException;
@@ -60,18 +59,6 @@ public class TokenService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-
-        if (bearerToken == null) {
-            throw new CustomException(ErrorCode.AUTH_HEADER_MISSING);
-        } else if (!bearerToken.startsWith("Bearer ")) {
-            throw new CustomException(ErrorCode.INVALID_AUTH_HEADER_FORMAT);
-        }
-
-        return bearerToken.substring(7);
     }
 
     public void validateTokenType(Claims claims, TokenType expectedTokenType) {
