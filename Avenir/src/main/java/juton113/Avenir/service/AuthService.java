@@ -14,26 +14,35 @@ public class AuthService {
     private final TokenService tokenService;
     private final RedisService redisService;
 
-    public AccessTokenDto issueAccessToken(String refreshToken) {
+    public AccessTokenDto reissueAccessToken(String refreshToken) {
         Claims claims = tokenService.parseToken(refreshToken);
         tokenService.validateTokenType(claims, TokenType.REFRESH);
 
         String memberId = claims.getSubject();
         redisService.validateStoredToken(memberId, refreshToken);
 
-        String accessToken = tokenService.createAccessToken(memberId);
-
-        return new AccessTokenDto(accessToken);
+        return issueAccessToken(memberId);
     }
 
-    public RefreshTokenDto issueRefreshToken(String refreshToken) {
+    public RefreshTokenDto reissueRefreshToken(String refreshToken) {
         Claims claims = tokenService.parseToken(refreshToken);
         tokenService.validateTokenType(claims, TokenType.REFRESH);
 
         String memberId = claims.getSubject();
         redisService.validateStoredToken(memberId, refreshToken);
 
+        return issueRefreshToken(memberId);
+    }
+
+    public AccessTokenDto issueAccessToken(String memberId) {
+        String newAccessToken = tokenService.createAccessToken(memberId);
+
+        return new AccessTokenDto(newAccessToken);
+    }
+
+    public RefreshTokenDto issueRefreshToken(String memberId) {
         String newRefreshToken = tokenService.createRefreshToken(memberId);
+        redisService.saveToken(memberId, newRefreshToken);
 
         return new RefreshTokenDto(newRefreshToken);
     }
