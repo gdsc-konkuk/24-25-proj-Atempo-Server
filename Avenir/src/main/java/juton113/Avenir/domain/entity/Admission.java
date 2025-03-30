@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Entity
 @AllArgsConstructor
 @Table(name = "admission_request")
-public class AdmissionRequest {
+public class Admission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
