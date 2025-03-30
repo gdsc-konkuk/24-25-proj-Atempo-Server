@@ -1,6 +1,6 @@
 package juton113.Avenir.domain.enums;
 
-public enum ResponseStatus {
+public enum CallResponseStatus {
     ACCEPTED,
     REJECTED,
     NO_RESPONSE;
