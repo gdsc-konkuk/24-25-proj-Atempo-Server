@@ -56,6 +56,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// twilio 라이브러리
+	implementation "com.twilio.sdk:twilio:10.7.1"
+
 	// swagger 라이브러리
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 }
