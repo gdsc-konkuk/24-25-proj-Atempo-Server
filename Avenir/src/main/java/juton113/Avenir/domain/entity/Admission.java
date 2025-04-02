@@ -26,5 +26,5 @@ public class Admission {
     private List<Hospital> hospitalList;
 
     @OneToOne(mappedBy = "admission")
-    private MessageHistory messageHistory;
+    private AdmissionMessage admissionMessage;
 }
