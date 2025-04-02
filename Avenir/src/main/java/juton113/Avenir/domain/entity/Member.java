@@ -16,13 +16,15 @@ import lombok.NoArgsConstructor;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    Long memberId;
+
     String provider;
     String providerId;
     String name;
     String nickName;
     String email;
     String profileUrl;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 }
