@@ -13,6 +13,10 @@ public class HospitalCallStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long hospitalCallStatusId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hospital_id")
+    private Hospital hospital;
+
     @Enumerated(EnumType.STRING)
     CallStatus callStatus;
 
