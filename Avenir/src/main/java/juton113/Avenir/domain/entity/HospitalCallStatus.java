@@ -2,34 +2,28 @@ package juton113.Avenir.domain.entity;
 
 import jakarta.persistence.*;
 import juton113.Avenir.domain.enums.CallResponseStatus;
-import juton113.Avenir.domain.enums.CallStatus;
 import lombok.AllArgsConstructor;
 
 @Entity
 @AllArgsConstructor
-@Table(name = "admission_hospital_response")
-public class AdmissionHospitalInfo {
+@Table(name = "call_status")
+public class CallStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admission_request_id", nullable = false)
+    @JoinColumn(name = "admission_id", nullable = false)
     Admission admission;
 
-    @Column(nullable = false)
     String hospitalName;
 
-    @Column(nullable = false)
     String hospitalPhoneNumber;
 
-    @Column(nullable = false)
-    int distance; // TODO: 단위 정하기
+    float distance;
 
-    @Column(nullable = false)
-    int travelTime; // TODO: 단위 정하기
+    int travelTime;
 
-    @Column(nullable = false)
     String detail; // TODO: 어떤 내용을 넣을 지 정하기
 
     @Enumerated(EnumType.STRING)
@@ -38,6 +32,7 @@ public class AdmissionHospitalInfo {
     @Enumerated(EnumType.STRING)
     CallResponseStatus callResponseStatus;
 
-    @Column(nullable = false)
     int callAttempts;
+
+    String ars_message;
 }
