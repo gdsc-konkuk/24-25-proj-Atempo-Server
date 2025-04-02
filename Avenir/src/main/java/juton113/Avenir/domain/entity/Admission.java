@@ -1,28 +1,30 @@
 package juton113.Avenir.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
-@AllArgsConstructor
-@Table(name = "admission_request")
+@Builder
+@Table(name = "admission")
 public class Admission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    Long admissionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     Member member;
 
-    @Column(nullable = false)
     BigDecimal latitude;
-
-    @Column(nullable = false)
     BigDecimal longitude;
-
-    @Column(nullable = false)
     String patientCondition;
+
+    @OneToMany(mappedBy = "admission")
+    private List<Hospital> hospitalList;
+
+    @OneToOne(mappedBy = "admission")
+    private MessageHistory messageHistory;
 }
