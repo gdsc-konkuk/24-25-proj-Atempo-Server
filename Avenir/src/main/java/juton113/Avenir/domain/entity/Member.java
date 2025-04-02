@@ -17,25 +17,12 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
-    @Column(nullable = false)
     String provider;
-
-    @Column(nullable = false)
     String providerId;
-
-    @Column(nullable = false)
     String name;
-
-    @Column
     String nickName;
-
-    @Column(nullable = false)
     String email;
-
-    @Column(nullable = false)
     String profileUrl;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 }
