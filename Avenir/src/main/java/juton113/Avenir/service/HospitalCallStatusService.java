@@ -35,12 +35,12 @@ public class HospitalCallStatusService {
         HospitalCallStatus callStatus = hospitalCallStatusRepository.findByCallId(updateHospitalCallStatusDto.getCallId()).orElseThrow(
                 () -> new CustomException(ErrorCode.HOSPITAL_CALL_STATUS_NOT_FOUND));
 
-        CallResponseStatus response = CallResponseStatus.REJECTED;
-
-        if(updateHospitalCallStatusDto.getResponseDigit().equals("1"))
-            response = CallResponseStatus.ACCEPTED;
+        String digit = updateHospitalCallStatusDto.getResponseDigit();
+        CallResponseStatus response = digit.equals("1") ? CallResponseStatus.ACCEPTED : CallResponseStatus.REJECTED;
 
         callStatus.update(CallStatus.ANSWERED, response);
+
+        if(!digit.equals("1")) return;
 
         // TODO SSE 적용할 것
 
