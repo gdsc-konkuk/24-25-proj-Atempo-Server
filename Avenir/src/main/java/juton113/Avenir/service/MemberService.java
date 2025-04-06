@@ -32,7 +32,7 @@ public class MemberService {
                 .name(createMemberDto.getName())
                 .email(email)
                 .profileUrl(createMemberDto.getProfileUrl())
-                .role(Role.MEMBER)
+                .role(Role.BASIC)
                 .build();
 
         return memberRepository.save(member);
