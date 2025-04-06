@@ -12,28 +12,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "members")
+@Table(name = "member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long MemberId;
+    Long memberId;
 
-    @Column(nullable = false)
     String provider;
-
-    @Column(nullable = false)
     String providerId;
-
-    @Column(nullable = false)
     String name;
-
-    @Column
     String nickName;
-
-    @Column(nullable = false)
     String email;
-
-    @Column(nullable = false)
     String profileUrl;
 
     @Enumerated(EnumType.STRING)

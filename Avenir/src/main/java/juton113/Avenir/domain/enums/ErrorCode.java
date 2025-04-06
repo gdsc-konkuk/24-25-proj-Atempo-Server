@@ -16,7 +16,10 @@ public enum ErrorCode {
 
     // Header 관련 예외
     AUTH_HEADER_MISSING("Authorization 헤더가 존재하지 않습니다", HttpStatus.UNAUTHORIZED),
-    INVALID_AUTH_HEADER_FORMAT("Authorization 헤더의 형식이 잘못되었습니다", HttpStatus.UNAUTHORIZED);
+    INVALID_AUTH_HEADER_FORMAT("Authorization 헤더의 형식이 잘못되었습니다", HttpStatus.UNAUTHORIZED),
+
+    // HospitalCallStatus
+    HOSPITAL_CALL_STATUS_NOT_FOUND("입원 전화 상태를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
     private final String message;
     private final HttpStatus httpStatus;
