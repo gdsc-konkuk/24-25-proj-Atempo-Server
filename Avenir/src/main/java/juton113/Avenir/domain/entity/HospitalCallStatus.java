@@ -3,10 +3,14 @@ package juton113.Avenir.domain.entity;
 import jakarta.persistence.*;
 import juton113.Avenir.domain.enums.CallResponseStatus;
 import juton113.Avenir.domain.enums.CallStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "hospital_call_status")
 public class HospitalCallStatus {
     @Id
