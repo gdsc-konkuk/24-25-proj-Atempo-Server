@@ -8,13 +8,13 @@ import juton113.Avenir.domain.entity.Member;
 import juton113.Avenir.domain.enums.CallResponseStatus;
 import juton113.Avenir.domain.enums.CallStatus;
 import juton113.Avenir.repository.AdmissionRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class AdmissionService {
     private final MemberService memberService;
