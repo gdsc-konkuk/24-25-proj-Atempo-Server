@@ -5,6 +5,7 @@ import juton113.Avenir.domain.dto.AdmissionDataRequestDto;
 import juton113.Avenir.service.AdmissionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdmissionController {
     private final AdmissionService admissionService;;
 
+    @PreAuthorize("hasAnyRole('ADMIN', VERIFIED)")
     @PostMapping
     public ResponseEntity<?> createAdmission(@RequestBody AdmissionDataRequestDto admissionDataRequestDto,
                                              @AuthenticationPrincipal UserDetails userDetails) {
