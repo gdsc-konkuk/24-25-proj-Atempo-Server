@@ -42,7 +42,7 @@ twilio:
   account-sid: ${TWILIO_ACCOUNT_SID}
   auth-token: ${TWILIO_AUTH_TOKEN}
   from-phone-number: ${TWILIO_FROM_PHONE_NUMBER}
-g
+
 origin:
   fe: ${FE_URL}
   be: ${BE_URL}
