@@ -1,5 +1,6 @@
 package juton113.Avenir.service;
 
+import jakarta.transaction.Transactional;
 import juton113.Avenir.domain.dto.CreateMemberDto;
 import juton113.Avenir.domain.entity.Member;
 import juton113.Avenir.domain.enums.ErrorCode;
@@ -15,6 +16,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+
+    @Transactional
     public Member findOrCreateMember(CreateMemberDto createMemberDto) {
         String email = createMemberDto.getEmail();
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
@@ -29,7 +32,7 @@ public class MemberService {
                 .name(createMemberDto.getName())
                 .email(email)
                 .profileUrl(createMemberDto.getProfileUrl())
-                .role(Role.MEMBER)
+                .role(Role.BASIC)
                 .build();
 
         return memberRepository.save(member);
