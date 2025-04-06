@@ -3,15 +3,17 @@ package juton113.Avenir.domain.entity;
 import jakarta.persistence.*;
 import juton113.Avenir.domain.enums.CallResponseStatus;
 import juton113.Avenir.domain.enums.CallStatus;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Entity
-@AllArgsConstructor
+@Builder
 @Table(name = "hospital_call_status")
 public class HospitalCallStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long hospitalCallStatusId;
+
+    String callId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id")
@@ -24,4 +26,11 @@ public class HospitalCallStatus {
     CallResponseStatus callResponseStatus;
 
     int callAttempts;
+
+    public void update(
+            CallStatus callStatus,
+            CallResponseStatus responseStatus) {
+        this.callStatus = callStatus;
+        this.callResponseStatus = responseStatus;
+    }
 }
