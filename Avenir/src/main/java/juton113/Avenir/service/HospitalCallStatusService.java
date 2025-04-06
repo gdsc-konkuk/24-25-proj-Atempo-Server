@@ -20,6 +20,7 @@ public class HospitalCallStatusService {
     @Transactional
     public void createHospitalCallStatus(CreateHospitalCallStatusDto createHospitalCallStatusDto) {
         HospitalCallStatus hospitalCallStatus = HospitalCallStatus.builder()
+                .callId(createHospitalCallStatusDto.getCallId())
                 .hospital(createHospitalCallStatusDto.getHospital())
                 .callStatus(createHospitalCallStatusDto.getCallStatus())
                 .callResponseStatus(createHospitalCallStatusDto.getCallResponseStatus())
