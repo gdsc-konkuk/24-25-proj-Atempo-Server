@@ -38,8 +38,15 @@ jwt:
   access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
   refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
 
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID}
+  auth-token: ${TWILIO_AUTH_TOKEN}
+  from-phone-number: ${TWILIO_FROM_PHONE_NUMBER}
+g
 origin:
   fe: ${FE_URL}
+  be: ${BE_URL}
+  ml: ${ML_URL}
 
 #logging:
 #  level:
@@ -47,5 +54,5 @@ origin:
 #    org.springframework: ${LOG_LEVEL_SPRING}
 #    jution113.Avenir: ${LOG_LEVEL_APP}
 
-  file:
-    name: logs/app.log
+file:
+  name: logs/app.log
