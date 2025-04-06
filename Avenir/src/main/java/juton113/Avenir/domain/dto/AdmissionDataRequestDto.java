@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AdmissionDataRequestDto {
     BigDecimal latitude;
     BigDecimal longitude;
