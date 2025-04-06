@@ -1,18 +1,14 @@
 package juton113.Avenir.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class CreateAdmissionRequestDto {
+@Builder
+public class AdmissionDataRequestDto {
     BigDecimal latitude;
     BigDecimal longitude;
 
