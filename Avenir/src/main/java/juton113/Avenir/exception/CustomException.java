@@ -8,7 +8,7 @@ public class CustomException extends RuntimeException {
     private final ErrorCode errorCode;
 
     public CustomException(ErrorCode errorCode) {
-        super(errorCode.getMessage()); // 로깅을 위해 설정
+        super(errorCode.getMessage()); // logging setting
         this.errorCode = errorCode;
     }
 }
