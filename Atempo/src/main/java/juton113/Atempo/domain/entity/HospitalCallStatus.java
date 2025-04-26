@@ -5,6 +5,7 @@ import juton113.Atempo.domain.enums.CallResponseStatus;
 import juton113.Atempo.domain.enums.CallStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -19,6 +20,7 @@ public class HospitalCallStatus {
 
     String callId;
 
+    @Getter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
