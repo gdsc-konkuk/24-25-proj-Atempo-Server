@@ -60,7 +60,7 @@ public class AdmissionService {
                     .address(createHospitalResponseDto.getAddress())
                     .distance(createHospitalResponseDto.getDistance())
                     .travelTime(createHospitalResponseDto.getTravelTime())
-                    .departments(createHospitalResponseDto.getDepartments())
+                    .departments(String.join(",", createHospitalResponseDto.getDepartments()))
                     .build();
 
             // create hospital entity
