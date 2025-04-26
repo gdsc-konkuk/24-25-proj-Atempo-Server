@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Entity
 @AllArgsConstructor
@@ -24,7 +26,7 @@ public class Hospital {
     private String address;
     private double distance;
     private Integer travelTime;
-    private String detail;
+    private String departments;
 
     @OneToOne(mappedBy = "hospital")
     private HospitalCallStatus hospitalCallStatus;
