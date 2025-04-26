@@ -3,6 +3,7 @@ package juton113.Atempo.domain.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.List;
 public class Admission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     Long admissionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
