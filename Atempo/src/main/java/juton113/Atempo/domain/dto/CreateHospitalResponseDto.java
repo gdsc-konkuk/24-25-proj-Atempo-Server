@@ -3,6 +3,8 @@ package juton113.Atempo.domain.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,5 +21,5 @@ public class CreateHospitalResponseDto {
     @JsonProperty("travel_time")
     private Integer travelTime;
 
-    private String detail;
+    private List<String> departments;
 }

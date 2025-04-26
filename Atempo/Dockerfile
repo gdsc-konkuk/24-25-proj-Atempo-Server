@@ -17,7 +17,7 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
 # 7. 빌드된 JAR 파일 복사
-COPY --from=build /app/build/libs/*-SNAPSHOT.jar avenir.jar
+COPY --from=build /app/build/libs/*-SNAPSHOT.jar atempo.jar
 
 # 8. 컨테이너 실행 시 기본 명령어 설정
-CMD ["java", "-jar", "avenir.jar"]
+CMD ["java", "-jar", "atempo.jar"]

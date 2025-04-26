@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HospitalCallStatusService {
     private final HospitalCallStatusRepository hospitalCallStatusRepository;
+    private final SseService sseService;
 
     @Transactional
     public void createHospitalCallStatus(CreateHospitalCallStatusDto createHospitalCallStatusDto) {
@@ -42,7 +43,9 @@ public class HospitalCallStatusService {
 
         if(!digit.equals("1")) return;
 
-        // TODO SSE 적용할 것
+        //
+        String message;
+        sseService.sendHospitalInfo();
 
     }
 }

@@ -60,7 +60,7 @@ public class AdmissionService {
                     .address(createHospitalResponseDto.getAddress())
                     .distance(createHospitalResponseDto.getDistance())
                     .travelTime(createHospitalResponseDto.getTravelTime())
-                    .detail(createHospitalResponseDto.getDetail())
+                    .departments(createHospitalResponseDto.getDepartments())
                     .build();
 
             // create hospital entity
@@ -91,59 +91,5 @@ public class AdmissionService {
                 .build();
 
         return admissionRepository.save(admission);
-    }
-
-    @Transactional
-    public void createAdmissionCallTest(Long memberId, AdmissionDataRequestTestDto admissionDataRequestTestDto) {
-        // create save admission entity
-        CreateAdmissionDto createAdmissionDto = CreateAdmissionDto
-                .builder()
-                .memberId(memberId)
-                .latitude(admissionDataRequestTestDto.getLatitude())
-                .longitude(admissionDataRequestTestDto.getLongitude())
-                .patientCondition(admissionDataRequestTestDto.getPatientCondition())
-                .build();
-
-        Admission admission = createAdmission(createAdmissionDto);
-
-        List<CreateHospitalResponseDto> hospitalList = admissionDataRequestTestDto.getHospitalList();
-        String arsMessage = admissionDataRequestTestDto.getArsMessage();
-
-        // create admission message entity
-        CreateAdmissionMessageDto createAdmissionMessageDto = CreateAdmissionMessageDto.builder()
-                .admission(admission)
-                .message(arsMessage)
-                .build();
-        admissionMessageService.createAdmissionMessage(createAdmissionMessageDto);
-
-        // request twilio call
-        for(CreateHospitalResponseDto createHospitalResponseDto : hospitalList) {
-            String hospitalNumber = createHospitalResponseDto.getPhoneNumber();
-            String callId = twilioService.createCall(hospitalNumber, arsMessage);
-
-            CreateHospitalDto createHospitalDto = CreateHospitalDto.builder()
-                    .admission(admission)
-                    .name(createHospitalResponseDto.getName())
-                    .phoneNumber(createHospitalResponseDto.getPhoneNumber())
-                    .address(createHospitalResponseDto.getAddress())
-                    .distance(createHospitalResponseDto.getDistance())
-                    .travelTime(createHospitalResponseDto.getTravelTime())
-                    .detail(createHospitalResponseDto.getDetail())
-                    .build();
-
-            // create hospital entity
-            Hospital hospital = hospitalService.createHospital(createHospitalDto);
-
-            // create hospitalCallStatus entity
-            CreateHospitalCallStatusDto createHospitalCallStatusDto = CreateHospitalCallStatusDto.builder()
-                    .callId(callId)
-                    .hospital(hospital)
-                    .callStatus(CallStatus.NO_ANSWER)
-                    .callResponseStatus(CallResponseStatus.NO_RESPONSE)
-                    .callAttempts(0)
-                    .build();
-
-            hospitalCallStatusService.createHospitalCallStatus(createHospitalCallStatusDto);
-        }
     }
 }

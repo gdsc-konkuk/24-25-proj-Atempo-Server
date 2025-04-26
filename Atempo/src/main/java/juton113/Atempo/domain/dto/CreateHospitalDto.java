@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import juton113.Atempo.domain.entity.Admission;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -20,5 +22,5 @@ public class CreateHospitalDto {
     @JsonProperty("travel_time")
     private Integer travelTime;
 
-    private String detail;
+    private List<String> departments;
 }
