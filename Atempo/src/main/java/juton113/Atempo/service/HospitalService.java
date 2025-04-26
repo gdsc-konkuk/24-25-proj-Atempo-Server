@@ -20,7 +20,7 @@ public class HospitalService {
                 .address(createHospitalDto.getAddress())
                 .distance(createHospitalDto.getDistance())
                 .travelTime(createHospitalDto.getTravelTime())
-                .detail(createHospitalDto.getDetail())
+                .departments(createHospitalDto.getDepartments())
                 .build();
 
         return hospitalRepository.save(hospital);
