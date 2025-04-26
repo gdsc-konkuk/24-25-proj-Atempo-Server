@@ -1,6 +1,5 @@
 package juton113.Atempo.controller;
 
-import juton113.Atempo.domain.dto.AdmissionDataRequestTestDto;
 import juton113.Atempo.domain.dto.CreateAdmissionDto;
 import juton113.Atempo.domain.dto.AdmissionDataRequestDto;
 import juton113.Atempo.service.AdmissionService;
@@ -35,16 +34,6 @@ public class AdmissionController {
                 .build();
 
         admissionService.createAdmissionCall(createAdmissionDto);
-
-        return ResponseEntity.ok().body("admission request success");
-    }
-
-    @PreAuthorize("hasAnyRole('ADMIN', VERIFIED)")
-    @PostMapping("/test")
-    public ResponseEntity<?> createAdmissionTest(@RequestBody AdmissionDataRequestTestDto admissionDataRequestTestDto,
-                                             @AuthenticationPrincipal UserDetails userDetails) {
-        Long memberId = Long.parseLong(userDetails.getUsername());
-        admissionService.createAdmissionCallTest(memberId, admissionDataRequestTestDto);
 
         return ResponseEntity.ok().body("admission request success");
     }
