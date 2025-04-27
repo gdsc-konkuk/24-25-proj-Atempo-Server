@@ -54,7 +54,7 @@ public class MemberService {
     }
 
     @Transactional
-    public GetMemberResponseDto updateMember(UpdateMemberDto updateMemberDto) {
+    public GetMemberResponseDto updateMemberProfile(UpdateMemberDto updateMemberDto) {
         Member member = findByMemberId(updateMemberDto.getMemberId());
         member.updateProfile(updateMemberDto.getName(),
                 updateMemberDto.getNickName(),

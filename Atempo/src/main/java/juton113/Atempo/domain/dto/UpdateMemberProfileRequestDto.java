@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateMemberRequestDto {
+public class UpdateMemberProfileRequestDto {
     String name;
     String nickName;
     String profileUrl;
