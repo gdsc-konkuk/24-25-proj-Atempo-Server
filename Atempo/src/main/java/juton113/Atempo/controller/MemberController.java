@@ -1,13 +1,14 @@
 package juton113.Atempo.controller;
 
 import juton113.Atempo.domain.dto.GetMemberResponseDto;
+import juton113.Atempo.domain.dto.UpdateMemberDto;
+import juton113.Atempo.domain.dto.UpdateMemberRequestDto;
 import juton113.Atempo.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
@@ -18,6 +19,20 @@ public class MemberController {
     @GetMapping("/{memberId}")
     public ResponseEntity<GetMemberResponseDto> getMember(@PathVariable("memberId") Long memberId) {
         return ResponseEntity.ok(memberService.getMember(memberId));
+    }
+
+    @PutMapping()
+    public ResponseEntity<GetMemberResponseDto> updateMember(@AuthenticationPrincipal UserDetails userDetails,
+                                                             @RequestBody UpdateMemberRequestDto updateMemberRequestDto) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        UpdateMemberDto updateMemberDto = UpdateMemberDto.builder()
+                .memberId(memberId)
+                .name(updateMemberRequestDto.getName())
+                .nickName(updateMemberRequestDto.getNickName())
+                .profileUrl(updateMemberRequestDto.getProfileUrl())
+                .build();
+
+        return ResponseEntity.ok(memberService.updateMember(updateMemberDto));
     }
 
 }

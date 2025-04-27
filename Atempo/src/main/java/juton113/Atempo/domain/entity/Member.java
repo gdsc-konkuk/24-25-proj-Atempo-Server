@@ -27,4 +27,12 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public void updateProfile(String name,
+                              String nickName,
+                              String profileUrl) {
+        this.name = name;
+        this.nickName = nickName;
+        this.profileUrl = profileUrl;
+    }
 }
