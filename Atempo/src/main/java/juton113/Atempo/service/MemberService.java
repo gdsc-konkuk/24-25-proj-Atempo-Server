@@ -2,6 +2,7 @@ package juton113.Atempo.service;
 
 import jakarta.transaction.Transactional;
 import juton113.Atempo.domain.dto.CreateMemberDto;
+import juton113.Atempo.domain.dto.GetMemberResponseDto;
 import juton113.Atempo.domain.entity.Member;
 import juton113.Atempo.domain.enums.ErrorCode;
 import juton113.Atempo.domain.enums.Role;
@@ -36,6 +37,18 @@ public class MemberService {
                 .build();
 
         return memberRepository.save(member);
+    }
+
+    public GetMemberResponseDto getMember(Long memberId) {
+        Member member = findByMemberId(memberId);
+
+        return GetMemberResponseDto.builder()
+                .name(member.getName())
+                .nickName(member.getNickName())
+                .email(member.getEmail())
+                .profileUrl(member.getProfileUrl())
+                .build();
+
     }
 
     public Member findMemberByEmail(String email) {
