@@ -1,6 +1,5 @@
 package juton113.Atempo.service;
 
-import jakarta.transaction.Transactional;
 import juton113.Atempo.domain.dto.CreateMemberDto;
 import juton113.Atempo.domain.dto.GetMemberResponseDto;
 import juton113.Atempo.domain.dto.UpdateMemberDto;
@@ -11,6 +10,7 @@ import juton113.Atempo.exception.CustomException;
 import juton113.Atempo.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -40,6 +40,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional(readOnly = true)
     public GetMemberResponseDto getMember(Long memberId) {
         Member member = findByMemberId(memberId);
 
