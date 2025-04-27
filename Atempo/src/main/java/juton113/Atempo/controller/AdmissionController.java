@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/admissions")
 public class AdmissionController {
-    private final AdmissionService admissionService;;
+    private final AdmissionService admissionService;
 
     @PreAuthorize("hasAnyRole('ADMIN', VERIFIED)")
     @PostMapping
