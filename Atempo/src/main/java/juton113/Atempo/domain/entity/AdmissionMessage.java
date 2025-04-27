@@ -1,9 +1,13 @@
 package juton113.Atempo.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Entity
@@ -21,4 +25,9 @@ public class AdmissionMessage {
 
     @Column(columnDefinition = "TEXT")
     private String message;
+
+    @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 }

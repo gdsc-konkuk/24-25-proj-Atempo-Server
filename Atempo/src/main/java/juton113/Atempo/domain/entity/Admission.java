@@ -1,6 +1,7 @@
 package juton113.Atempo.domain.entity;
 
 import jakarta.persistence.*;
+import juton113.Atempo.auditing.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "admission")
-public class Admission {
+public class Admission extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter

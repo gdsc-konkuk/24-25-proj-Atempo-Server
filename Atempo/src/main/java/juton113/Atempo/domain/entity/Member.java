@@ -1,6 +1,7 @@
 package juton113.Atempo.domain.entity;
 
 import jakarta.persistence.*;
+import juton113.Atempo.auditing.BaseTimeEntity;
 import juton113.Atempo.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "member")
-public class Member {
+public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long memberId;
