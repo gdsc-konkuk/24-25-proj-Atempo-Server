@@ -35,4 +35,8 @@ public class Member {
         this.nickName = nickName;
         this.profileUrl = profileUrl;
     }
+
+    public void updateRole(Role role) {
+        this.role = role;
+    }
 }

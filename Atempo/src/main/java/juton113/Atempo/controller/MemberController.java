@@ -3,7 +3,7 @@ package juton113.Atempo.controller;
 import juton113.Atempo.domain.dto.GetMemberResponseDto;
 import juton113.Atempo.domain.dto.UpdateMemberDto;
 import juton113.Atempo.domain.dto.UpdateMemberProfileRequestDto;
-import juton113.Atempo.domain.dto.UpdateMemberRequestDto;
+import juton113.Atempo.domain.dto.UpdateMemberRoleRequestDto;
 import juton113.Atempo.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMember(memberId));
     }
 
-    @PutMapping()
+    @PutMapping("/profile")
     public ResponseEntity<GetMemberResponseDto> updateMemberProfile(@AuthenticationPrincipal UserDetails userDetails,
                                                              @RequestBody UpdateMemberProfileRequestDto updateMemberRequestDto) {
         Long memberId = Long.parseLong(userDetails.getUsername());
@@ -40,9 +40,9 @@ public class MemberController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping()
-    public ResponseEntity<GetMemberResponseDto> updateMemberRole() {
-
+    @PutMapping("/role")
+    public ResponseEntity<GetMemberResponseDto> updateMemberRole(UpdateMemberRoleRequestDto updateMemberRequestDto) {
+        return ResponseEntity.ok(memberService.updateMemberRole(updateMemberRequestDto));
     }
 
 }

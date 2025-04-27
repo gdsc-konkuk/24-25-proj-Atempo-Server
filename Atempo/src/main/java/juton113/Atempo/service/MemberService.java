@@ -3,6 +3,7 @@ package juton113.Atempo.service;
 import juton113.Atempo.domain.dto.CreateMemberDto;
 import juton113.Atempo.domain.dto.GetMemberResponseDto;
 import juton113.Atempo.domain.dto.UpdateMemberDto;
+import juton113.Atempo.domain.dto.UpdateMemberRoleRequestDto;
 import juton113.Atempo.domain.entity.Member;
 import juton113.Atempo.domain.enums.ErrorCode;
 import juton113.Atempo.domain.enums.Role;
@@ -49,6 +50,7 @@ public class MemberService {
                 .nickName(member.getNickName())
                 .email(member.getEmail())
                 .profileUrl(member.getProfileUrl())
+                .role(member.getRole())
                 .build();
 
     }
@@ -65,6 +67,21 @@ public class MemberService {
                 .nickName(member.getNickName())
                 .email(member.getEmail())
                 .profileUrl(member.getProfileUrl())
+                .role(member.getRole())
+                .build();
+    }
+
+    @Transactional
+    public GetMemberResponseDto updateMemberRole(UpdateMemberRoleRequestDto updateMemberRequestDto) {
+        Member member = findByMemberId(updateMemberRequestDto.getMemberId());
+        member.updateRole(updateMemberRequestDto.getRole());
+
+        return GetMemberResponseDto.builder()
+                .name(member.getName())
+                .nickName(member.getNickName())
+                .email(member.getEmail())
+                .profileUrl(member.getProfileUrl())
+                .role(member.getRole())
                 .build();
     }
 

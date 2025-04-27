@@ -8,10 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMemberResponseDto {
-    String name;
-    String nickName;
-    String email;
-    String profileUrl;
+public class UpdateMemberRoleRequestDto {
+    Long memberId;
     Role role;
 }
