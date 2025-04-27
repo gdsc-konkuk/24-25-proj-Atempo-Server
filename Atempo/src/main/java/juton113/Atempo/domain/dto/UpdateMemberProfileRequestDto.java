@@ -1,5 +1,6 @@
 package juton113.Atempo.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
@@ -9,6 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 public class UpdateMemberProfileRequestDto {
     String name;
+    @JsonProperty("nick_name")
     String nickName;
+    @JsonProperty("profile_url")
     String profileUrl;
 }

@@ -41,7 +41,7 @@ public class MemberController {
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/role")
-    public ResponseEntity<GetMemberResponseDto> updateMemberRole(UpdateMemberRoleRequestDto updateMemberRequestDto) {
+    public ResponseEntity<GetMemberResponseDto> updateMemberRole(@RequestBody UpdateMemberRoleRequestDto updateMemberRequestDto) {
         return ResponseEntity.ok(memberService.updateMemberRole(updateMemberRequestDto));
     }
 
