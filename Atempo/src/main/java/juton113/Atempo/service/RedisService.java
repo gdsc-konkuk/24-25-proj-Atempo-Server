@@ -28,6 +28,10 @@ public class RedisService {
         valueOperations.set(key, value, expiration, TimeUnit.MILLISECONDS);
     }
 
+    public boolean validateBlacklistedToken(String accessToken) {
+        return redisTemplate.hasKey(accessToken);
+    }
+
     public void validateStoredToken(String key, String token) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 

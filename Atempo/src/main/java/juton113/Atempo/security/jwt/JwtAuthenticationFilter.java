@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import juton113.Atempo.domain.enums.ErrorCode;
 import juton113.Atempo.domain.enums.TokenType;
 import juton113.Atempo.exception.CustomException;
+import juton113.Atempo.service.RedisService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,13 +23,17 @@ import java.io.IOException;
 @AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
+    private final RedisService redisService;
     private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
 
-        if(token != null) {
+        if (token != null) {
+            if (redisService.validateBlacklistedToken(token))
+                throw new CustomException(ErrorCode.LOGOUT_TOKEN);
+
             Claims claims = tokenService.parseToken(token);
 
             if (claims.get("tokenType").equals(TokenType.ACCESS.toString())) {

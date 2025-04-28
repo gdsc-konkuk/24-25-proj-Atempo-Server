@@ -13,6 +13,7 @@ public enum ErrorCode {
     // Token 관련 예외
     REFRESH_TOKEN_NOT_FOUND("Refresh 토큰이 존재하지 않습니다", HttpStatus.UNAUTHORIZED),
     INVALID_TOKEN_TYPE("잘못된 토큰 종류입니다. Refresh 토큰이 필요합니다.", HttpStatus.UNAUTHORIZED),
+    LOGOUT_TOKEN("로그아웃된 토큰입니다.", HttpStatus.UNAUTHORIZED),
 
     // Header 관련 예외
     AUTH_HEADER_MISSING("Authorization 헤더가 존재하지 않습니다", HttpStatus.UNAUTHORIZED),
