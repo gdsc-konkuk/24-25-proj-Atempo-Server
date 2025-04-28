@@ -12,6 +12,7 @@ import juton113.Atempo.security.jwt.TokenService;
 import juton113.Atempo.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "인증, 인가", description = "로그인, 토큰 발급과 관련된 API")
@@ -57,6 +58,14 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + refreshTokenDto.getRefreshToken())
                 .body("Refresh Token reissued");
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @DeleteMapping("/refresh-token/{memberId}")
+    private ResponseEntity<?> invalidateRefreshToken(@PathVariable("memberId") String memberId) {
+        authService.invalidateRefreshToken(memberId);
+
+        return ResponseEntity.noContent().build();
     }
 
     private String resolveToken(String bearerToken) {

@@ -22,17 +22,17 @@ public class RedisService {
         valueOperations.set(key, refreshToken, tokenService.getRefreshTokenTime(), TimeUnit.MILLISECONDS);
     }
 
-        public void validateStoredToken(String key, String token) {
-            ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+    public void validateStoredToken(String key, String token) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-            String foundToken = Optional.of(valueOperations.get(key)).orElseThrow(()-> new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+        String foundToken = Optional.ofNullable(valueOperations.get(key)).orElseThrow(()-> new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
 
-            if(!foundToken.equals(token))
-                throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
-        }
+        if(!foundToken.equals(token))
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+    }
 
-        public void deleteToken(String key) {
-        // TODO: 검증 후 삭제할 수 있도록
-        redisTemplate.delete(key);
+    public void deleteToken(String key) {
+        if (!redisTemplate.delete(key))
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
     }
 }

@@ -46,4 +46,8 @@ public class AuthService {
 
         return new RefreshTokenDto(newRefreshToken);
     }
+
+    public void invalidateRefreshToken(String targetMemberId) {
+        redisService.deleteToken(targetMemberId);
+    }
 }
