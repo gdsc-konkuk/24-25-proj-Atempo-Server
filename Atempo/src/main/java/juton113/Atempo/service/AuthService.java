@@ -14,6 +14,14 @@ public class AuthService {
     private final TokenService tokenService;
     private final RedisService redisService;
 
+    public void logout(String accessToken) {
+        Claims claims = tokenService.parseToken(accessToken);
+
+        String memberId = claims.getSubject();
+        invalidateRefreshToken(memberId);
+        redisService.saveBlacklistedAccessToken(accessToken, "logout");
+    }
+
     public AccessTokenDto reissueAccessToken(String refreshToken) {
         Claims claims = tokenService.parseToken(refreshToken);
         tokenService.validateTokenType(claims, TokenType.REFRESH);
@@ -42,12 +50,12 @@ public class AuthService {
 
     public RefreshTokenDto issueRefreshToken(String memberId) {
         String newRefreshToken = tokenService.createRefreshToken(memberId);
-        redisService.saveToken(memberId, newRefreshToken);
+        redisService.saveRefreshToken(memberId, newRefreshToken);
 
         return new RefreshTokenDto(newRefreshToken);
     }
 
-    public void invalidateRefreshToken(String targetMemberId) {
-        redisService.deleteToken(targetMemberId);
+    public void invalidateRefreshToken(String memberId) {
+        redisService.deleteToken(memberId);
     }
 }

@@ -17,9 +17,19 @@ public class RedisService {
     private final TokenService tokenService;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public void saveToken(String key, String refreshToken) {
+    public void saveRefreshToken(String key, String refreshToken) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key, refreshToken, tokenService.getRefreshTokenTime(), TimeUnit.MILLISECONDS);
+    }
+
+    public void saveBlacklistedAccessToken(String key, String value) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        long expiration = tokenService.getExpiration(key);
+        valueOperations.set(key, value, expiration, TimeUnit.MILLISECONDS);
+    }
+
+    public boolean validateBlacklistedToken(String accessToken) {
+        return redisTemplate.hasKey(accessToken);
     }
 
     public void validateStoredToken(String key, String token) {

@@ -36,7 +36,8 @@ public class SecurityConfig {
                         .disable()
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "api/v1/auth/**", "api/v1/twilio/**", "/h2-console/**",
+                        .requestMatchers("/", "/index.html",
+                                "api/v1/auth/login", "api/v1/auth/access-token", "api/v1/auth/refresh-token", "api/v1/twilio/**",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 )

@@ -65,5 +65,10 @@ public class TokenService {
         if (!claims.get("tokenType").equals(expectedTokenType.toString()))
             throw new CustomException(ErrorCode.INVALID_TOKEN_TYPE);
     }
+
+    public long getExpiration(String token) {
+        Date expiration = parseToken(token).getExpiration();
+        return expiration.getTime() - System.currentTimeMillis();
+    }
 }
 
