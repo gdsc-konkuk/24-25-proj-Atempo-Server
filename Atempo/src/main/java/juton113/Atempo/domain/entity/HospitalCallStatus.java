@@ -1,6 +1,7 @@
 package juton113.Atempo.domain.entity;
 
 import jakarta.persistence.*;
+import juton113.Atempo.auditing.BaseTimeEntity;
 import juton113.Atempo.domain.enums.CallResponseStatus;
 import juton113.Atempo.domain.enums.CallStatus;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "hospital_call_status")
-public class HospitalCallStatus {
+public class HospitalCallStatus extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long hospitalCallStatusId;

@@ -1,10 +1,14 @@
 package juton113.Atempo.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Entity
@@ -36,4 +40,9 @@ public class Hospital {
 
     @OneToOne(mappedBy = "hospital")
     private HospitalCallStatus hospitalCallStatus;
+
+    @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 }
