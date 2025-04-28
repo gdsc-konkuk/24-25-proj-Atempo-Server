@@ -51,7 +51,8 @@ public class AdmissionService {
         // request twilio call
         for(CreateHospitalResponseDto createHospitalResponseDto : hospitalList) {
             String hospitalNumber = createHospitalResponseDto.getPhoneNumber();
-            String callId = twilioService.createCall(hospitalNumber, arsMessage);
+//            String callId = twilioService.createCall(hospitalNumber, arsMessage);
+            String callId = twilioService.createMockCall(hospitalNumber, arsMessage);
 
             CreateHospitalDto createHospitalDto = CreateHospitalDto.builder()
                     .admission(admission)

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 @Service
 public class TwilioService {
@@ -55,6 +56,14 @@ public class TwilioService {
                 .build();
 
         return response.toXml();
+    }
+
+    public String createMockCall(String toPhoneNumber, String arsMessage) {
+        return  generateMockCallSid();
+    }
+
+    private String generateMockCallSid() {
+        return "CA" + UUID.randomUUID().toString().replace("-", "").substring(0, 32);
     }
 
 }
