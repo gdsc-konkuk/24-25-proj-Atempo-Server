@@ -32,6 +32,14 @@ public class AuthController {
         return ResponseEntity.ok(new LoginResponseDto("OAuth 로그인 URL 반환", loginUrl));
     }
 
+    @DeleteMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorization) {
+        String accessToken = resolveToken(authorization);
+        authService.logout(accessToken);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
             summary = "Access 토큰 발급",
             description = "Refresh 토큰을 Authorization: Bearer edy7esvas... 형태로 제출하여 Access Token을 발급 받는다."
