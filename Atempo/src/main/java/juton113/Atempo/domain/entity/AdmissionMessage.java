@@ -27,7 +27,7 @@ public class AdmissionMessage {
     private String message;
 
     @CreatedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
     @Column(updatable = false)
     private LocalDateTime createdAt;
 }
