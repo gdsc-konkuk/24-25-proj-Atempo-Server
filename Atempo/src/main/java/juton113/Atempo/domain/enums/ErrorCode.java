@@ -10,6 +10,9 @@ public enum ErrorCode {
     // Member 관련 예외
     USER_NOT_FOUND("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
+    // Admission
+    ADMISSION_NOT_FOUND("입원 요청을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+
     // Token 관련 예외
     REFRESH_TOKEN_NOT_FOUND("Refresh 토큰이 존재하지 않습니다", HttpStatus.UNAUTHORIZED),
     INVALID_TOKEN_TYPE("잘못된 토큰 종류입니다. Refresh 토큰이 필요합니다.", HttpStatus.UNAUTHORIZED),

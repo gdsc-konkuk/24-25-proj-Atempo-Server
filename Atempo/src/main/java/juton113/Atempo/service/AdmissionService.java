@@ -2,11 +2,14 @@ package juton113.Atempo.service;
 
 import jakarta.transaction.Transactional;
 import juton113.Atempo.domain.dto.*;
+import juton113.Atempo.domain.dto.common.HospitalInfo;
 import juton113.Atempo.domain.entity.Admission;
 import juton113.Atempo.domain.entity.Hospital;
 import juton113.Atempo.domain.entity.Member;
 import juton113.Atempo.domain.enums.CallResponseStatus;
 import juton113.Atempo.domain.enums.CallStatus;
+import juton113.Atempo.domain.enums.ErrorCode;
+import juton113.Atempo.exception.CustomException;
 import juton113.Atempo.repository.AdmissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,19 +29,55 @@ public class AdmissionService {
     private final AdmissionRepository admissionRepository;
 
     @Transactional
-    public void createAdmissionCall(CreateAdmissionDto createAdmissionDto) {
-        // create save admission entity
-        Admission admission = createAdmission(createAdmissionDto);
+    public CreateAdmissionResponse createAdmissionCall(CreateAdmissionDto createAdmissionDto) {
+        Member member = memberService.findByMemberId(createAdmissionDto.getMemberId());
 
+        Admission admission = Admission.of(
+                member,
+                createAdmissionDto.getLocation(),
+                createAdmissionDto.getSearchRadius(),
+                createAdmissionDto.getPatientCondition(),
+                null);
+
+        processAdmissionCall(admission);
+
+        admissionRepository.save(admission);
+
+        return CreateAdmissionResponse.builder().admissionId(admission.getAdmissionId()).build();
+    }
+
+    @Transactional
+    public CreateAdmissionResponse retryAdmissionCallByRadius(RetryAdmissionDto retryAdmissionDto) {
+        Member member = memberService.findByMemberId(retryAdmissionDto.getMemberId());
+        Long originalAdmissionId = retryAdmissionDto.getOriginalAdmissionId();
+        Admission originalAdmission = admissionRepository.findById(originalAdmissionId).orElseThrow(() -> new CustomException(ErrorCode.ADMISSION_NOT_FOUND));
+
+        Admission admission = Admission.of(
+                member,
+                retryAdmissionDto.getLocation(),
+                retryAdmissionDto.getSearchRadius(),
+                originalAdmission.getPatientCondition(),
+                originalAdmissionId);
+
+        processAdmissionCall(admission);
+
+        admissionRepository.save(admission);
+
+        return CreateAdmissionResponse.builder().admissionId(admission.getAdmissionId()).build();
+    }
+
+    private void processAdmissionCall(Admission admission) {
         // request hospital list and ars message to ml-server
-        AdmissionDataRequestDto requestDto = AdmissionDataRequestDto.builder()
-                .latitude(createAdmissionDto.getLatitude())
-                .longitude(createAdmissionDto.getLongitude())
-                .patientCondition(createAdmissionDto.getPatientCondition())
+        MlCreateAdmissionRequest request = MlCreateAdmissionRequest.builder()
+                .location(admission.getLocation())
+                .searchRadius(admission.getSearchRadius())
+                .patientCondition(admission.getPatientCondition())
                 .build();
-        AdmissionDataResponseDto response = mlServerService.requestAdmissionData(requestDto);
+//        MlCreateAdmissionResponse response = mlServerService.requestAdmissionData(request);
+        // TODO:  실제 서비스 시, 위의 주석을 해제하고 requestAdmissionMockData를 호출하는 라인은 지울 것
+        MlCreateAdmissionResponse response = mlServerService.requestAdmissionMockData(request);
 
-        List<CreateHospitalResponseDto> hospitalList = response.getHospitalList();
+        List<HospitalInfo> hospitalInfoList = response.getHospitalList();
         String arsMessage = response.getArsMessage();
 
         // create admission message entity
@@ -49,19 +88,21 @@ public class AdmissionService {
         admissionMessageService.createAdmissionMessage(createAdmissionMessageDto);
 
         // request twilio call
-        for(CreateHospitalResponseDto createHospitalResponseDto : hospitalList) {
-            String hospitalNumber = createHospitalResponseDto.getPhoneNumber();
+        for(HospitalInfo hospitalInfo : hospitalInfoList) {
+            String hospitalPhoneNumber = hospitalInfo.getPhoneNumber();
+
 //            String callId = twilioService.createCall(hospitalNumber, arsMessage);
-            String callId = twilioService.createMockCall(hospitalNumber, arsMessage);
+            // TODO: 실제 서비스 시, 위의 주석을 해제하고 createMockCall를 호출하는 라인은 지울 것
+            String callId = twilioService.createMockCall(hospitalPhoneNumber, arsMessage);
 
             CreateHospitalDto createHospitalDto = CreateHospitalDto.builder()
                     .admission(admission)
-                    .name(createHospitalResponseDto.getName())
-                    .phoneNumber(createHospitalResponseDto.getPhoneNumber())
-                    .address(createHospitalResponseDto.getAddress())
-                    .distance(createHospitalResponseDto.getDistance())
-                    .travelTime(createHospitalResponseDto.getTravelTime())
-                    .departments(String.join(",", createHospitalResponseDto.getDepartments()))
+                    .name(hospitalInfo.getName())
+                    .phoneNumber(hospitalInfo.getPhoneNumber())
+                    .address(hospitalInfo.getAddress())
+                    .distance(hospitalInfo.getDistance())
+                    .travelTime(hospitalInfo.getTravelTime())
+                    .departments(String.join(",", hospitalInfo.getDepartments()))
                     .build();
 
             // create hospital entity
@@ -78,19 +119,5 @@ public class AdmissionService {
 
             hospitalCallStatusService.createHospitalCallStatus(createHospitalCallStatusDto);
         }
-    }
-
-    @Transactional
-    public Admission createAdmission(CreateAdmissionDto createAdmissionDto) {
-        Member member = memberService.findByMemberId(createAdmissionDto.getMemberId());
-
-        Admission admission = Admission.builder()
-                .member(member)
-                .latitude(createAdmissionDto.getLatitude())
-                .longitude(createAdmissionDto.getLongitude())
-                .patientCondition(createAdmissionDto.getPatientCondition())
-                .build();
-
-        return admissionRepository.save(admission);
     }
 }

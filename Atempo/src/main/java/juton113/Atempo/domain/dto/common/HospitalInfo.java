@@ -1,4 +1,4 @@
-package juton113.Atempo.domain.dto;
+package juton113.Atempo.domain.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateHospitalResponseDto {
+public class HospitalInfo {
     private String name;
 
     @JsonProperty("phone_number")
