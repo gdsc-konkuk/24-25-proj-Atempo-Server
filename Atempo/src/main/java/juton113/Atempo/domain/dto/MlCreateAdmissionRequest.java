@@ -2,13 +2,13 @@ package juton113.Atempo.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import juton113.Atempo.domain.dto.common.Location;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MlCreateAdmissionRequest {
     private Location location;
     private int searchRadius;
