@@ -12,6 +12,7 @@ import lombok.*;
 public class CreateAdmissionRequest {
     private Location location;
 
+    @JsonProperty("search_radius")
     private int searchRadius;
 
     @JsonProperty("patient_condition")

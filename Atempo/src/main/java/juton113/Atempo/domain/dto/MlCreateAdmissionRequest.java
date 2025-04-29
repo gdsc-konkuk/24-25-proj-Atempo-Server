@@ -11,6 +11,8 @@ import lombok.*;
 @AllArgsConstructor
 public class MlCreateAdmissionRequest {
     private Location location;
+
+    @JsonProperty("search_radius")
     private int searchRadius;
 
     @JsonProperty("patient_condition")
