@@ -1,19 +1,19 @@
 package juton113.Atempo.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import juton113.Atempo.domain.dto.common.Location;
 import lombok.*;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdmissionDataRequestDto {
-    BigDecimal latitude;
-    BigDecimal longitude;
+public class CreateAdmissionRequest {
+    private Location location;
+
+    private int searchRadius;
 
     @JsonProperty("patient_condition")
-    String patientCondition;
+    private String patientCondition;
 }

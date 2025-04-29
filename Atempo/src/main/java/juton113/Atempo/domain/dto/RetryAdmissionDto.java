@@ -7,9 +7,9 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateAdmissionDto {
+public class RetryAdmissionDto {
     private Long memberId;
     private Location location;
     private int searchRadius;
-    private String patientCondition;
+    private Long originalAdmissionId;
 }

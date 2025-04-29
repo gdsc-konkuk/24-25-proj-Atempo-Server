@@ -1,7 +1,8 @@
 package juton113.Atempo.service;
 
-import juton113.Atempo.domain.dto.AdmissionDataRequestDto;
-import juton113.Atempo.domain.dto.AdmissionDataResponseDto;
+import jakarta.transaction.Transactional;
+import juton113.Atempo.domain.dto.MlCreateAdmissionRequest;
+import juton113.Atempo.domain.dto.MlCreateAdmissionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -13,18 +14,20 @@ import org.springframework.web.client.RestTemplate;
 public class MlServerService {
     @Value("${origin.ml}")
     private String mlServerUrl;
-    public AdmissionDataResponseDto requestAdmissionData(AdmissionDataRequestDto request) {
+
+    @Transactional
+    public MlCreateAdmissionResponse requestAdmissionData(MlCreateAdmissionRequest request) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<AdmissionDataRequestDto> entity = new HttpEntity<>(request, headers);
+        HttpEntity<MlCreateAdmissionRequest> entity = new HttpEntity<>(request, headers);
 
-        ResponseEntity<AdmissionDataResponseDto> response = restTemplate.exchange(
+        ResponseEntity<MlCreateAdmissionResponse> response = restTemplate.exchange(
                 mlServerUrl,
                 HttpMethod.POST,
                 entity,
-                AdmissionDataResponseDto.class
+                MlCreateAdmissionResponse.class
         );
 
         return response.getBody();

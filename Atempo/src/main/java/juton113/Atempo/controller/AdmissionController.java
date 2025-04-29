@@ -1,17 +1,13 @@
 package juton113.Atempo.controller;
 
-import juton113.Atempo.domain.dto.CreateAdmissionDto;
-import juton113.Atempo.domain.dto.AdmissionDataRequestDto;
+import juton113.Atempo.domain.dto.*;
 import juton113.Atempo.service.AdmissionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
@@ -20,22 +16,37 @@ public class AdmissionController {
     private final AdmissionService admissionService;
 
     @PreAuthorize("hasAnyRole('ADMIN', VERIFIED)")
-    @PostMapping
-    public ResponseEntity<?> createAdmission(@RequestBody AdmissionDataRequestDto admissionDataRequestDto,
-                                             @AuthenticationPrincipal UserDetails userDetails) {
+    @PostMapping()
+    public ResponseEntity<CreateAdmissionResponse> createAdmission(@AuthenticationPrincipal UserDetails userDetails,
+                                                                   @RequestBody CreateAdmissionRequest createAdmissionRequest) {
         Long memberId = Long.parseLong(userDetails.getUsername());
 
         CreateAdmissionDto createAdmissionDto = CreateAdmissionDto
                 .builder()
                 .memberId(memberId)
-                .latitude(admissionDataRequestDto.getLatitude())
-                .longitude(admissionDataRequestDto.getLongitude())
-                .patientCondition(admissionDataRequestDto.getPatientCondition())
+                .location(createAdmissionRequest.getLocation())
+                .searchRadius(createAdmissionRequest.getSearchRadius())
+                .patientCondition(createAdmissionRequest.getPatientCondition())
                 .build();
 
-        admissionService.createAdmissionCall(createAdmissionDto);
+        return ResponseEntity.ok(admissionService.createAdmissionCall(createAdmissionDto));
+    }
 
-        return ResponseEntity.ok().body("admission request success");
+    @PreAuthorize("hasAnyRole('ADMIN', VERIFIED)")
+    @PostMapping("/{admissionId}/retry")
+    public ResponseEntity<CreateAdmissionResponse> retryAdmissionWithRadius(@AuthenticationPrincipal UserDetails userDetails,
+                                                      @PathVariable Long admissionId,
+                                                      @RequestBody RetryAdmissionRequest retryAdmissionRequest) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+
+        RetryAdmissionDto retryAdmissionDto = RetryAdmissionDto.builder()
+                .memberId(memberId)
+                .originalAdmissionId(admissionId)
+                .location(retryAdmissionRequest.getLocation())
+                .searchRadius(retryAdmissionRequest.getSearchRadius())
+                .build();
+
+        return ResponseEntity.ok(admissionService.retryAdmissionCallByRadius(retryAdmissionDto));
     }
 
 }

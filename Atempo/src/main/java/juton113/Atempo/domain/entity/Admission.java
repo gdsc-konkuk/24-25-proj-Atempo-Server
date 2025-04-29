@@ -2,6 +2,7 @@ package juton113.Atempo.domain.entity;
 
 import jakarta.persistence.*;
 import juton113.Atempo.auditing.BaseTimeEntity;
+import juton113.Atempo.domain.dto.common.Location;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,19 +20,41 @@ public class Admission extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
-    Long admissionId;
+    private Long admissionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    Member member;
+    private Member member;
 
-    BigDecimal latitude;
-    BigDecimal longitude;
-    String patientCondition;
+    @Getter
+    @Embedded
+    private Location location;
+
+    @Getter
+    private int searchRadius;
+
+    @Getter
+    private String patientCondition;
+
+    private Long originalAdmissionId;
 
     @OneToMany(mappedBy = "admission")
     private List<Hospital> hospitalList;
 
     @OneToOne(mappedBy = "admission")
     private AdmissionMessage admissionMessage;
+
+    public static Admission of(Member member,
+                               Location location,
+                               int searchRadius,
+                               String patientCondition,
+                               Long originalAdmissionId) {
+        return Admission.builder()
+                .member(member)
+                .location(location)
+                .searchRadius(searchRadius)
+                .patientCondition(patientCondition)
+                .originalAdmissionId(originalAdmissionId)
+                .build();
+    }
 }
