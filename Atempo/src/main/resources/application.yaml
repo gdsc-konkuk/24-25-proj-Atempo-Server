@@ -1,0 +1,61 @@
+spring:
+  logging:
+    level:
+      org.springframework: ${LOG_LEVEL_SECURITY}
+      web: ${LOG_LEVEL_WEB}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH_CLIENT_ID}
+            client-secret: ${OAUTH_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            scope: profile, email
+            redirect-uri: ${OAUTH_REDIRECT_URI}
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    database: mysql
+    show-sql: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+  refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID}
+  auth-token: ${TWILIO_AUTH_TOKEN}
+  from-phone-number: ${TWILIO_FROM_PHONE_NUMBER}
+
+origin:
+  fe: ${FE_URL}
+  be: ${BE_URL}
+  ml: ${ML_URL}
+
+#logging:
+#  level:
+#    root: ${LOG_LEVEL_ROOT}
+#    org.springframework: ${LOG_LEVEL_SPRING}
+#    jution113.Avenir: ${LOG_LEVEL_APP}
+
+file:
+  name: logs/app.log
+
+sse:
+  connection-time: ${SSE_CONNECTION_TIME}
