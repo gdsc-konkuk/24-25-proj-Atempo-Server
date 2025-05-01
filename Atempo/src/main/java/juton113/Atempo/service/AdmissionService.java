@@ -73,9 +73,9 @@ public class AdmissionService {
                 .searchRadius(admission.getSearchRadius())
                 .patientCondition(admission.getPatientCondition())
                 .build();
-//        MlCreateAdmissionResponse response = mlServerService.requestAdmissionData(request);
+        MlCreateAdmissionResponse response = mlServerService.requestAdmissionData(request);
         // TODO:  실제 서비스 시, 위의 주석을 해제하고 requestAdmissionMockData를 호출하는 라인은 지울 것
-        MlCreateAdmissionResponse response = mlServerService.requestAdmissionMockData(request);
+//        MlCreateAdmissionResponse response = mlServerService.requestAdmissionMockData(request);
 
         List<HospitalInfo> hospitalInfoList = response.getHospitalList();
         String arsMessage = response.getArsMessage();
