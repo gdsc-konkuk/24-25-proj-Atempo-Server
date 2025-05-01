@@ -22,6 +22,9 @@ public enum ErrorCode {
     MALFORMED_TOKEN("잘못된 토큰 형식입니다.", HttpStatus.UNAUTHORIZED),
     LOGOUT_TOKEN("로그아웃된 토큰입니다.", HttpStatus.UNAUTHORIZED),
 
+    // 인가 관련 예외
+    ACCESS_DENIED("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
+
     // Header 관련 예외
     AUTH_HEADER_MISSING("Authorization 헤더가 존재하지 않습니다", HttpStatus.UNAUTHORIZED),
     INVALID_AUTH_HEADER_FORMAT("Authorization 헤더의 형식이 잘못되었습니다", HttpStatus.UNAUTHORIZED),

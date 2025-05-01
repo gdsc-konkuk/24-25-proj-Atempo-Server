@@ -30,33 +30,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
 
-        if (token == null) {
-            request.setAttribute("errorCode", ErrorCode.TOKEN_EXPIRED);
-            throw new JwtAuthenticationException(ErrorCode.AUTH_HEADER_MISSING);
-        }
+        if (token != null) {
+            try {
+                if (redisService.validateBlacklistedToken(token)) {
+                    request.setAttribute("errorCode", ErrorCode.LOGOUT_TOKEN);
+                    throw new JwtAuthenticationException(ErrorCode.LOGOUT_TOKEN);
+                }
 
-        if (redisService.validateBlacklistedToken(token)) {
-            request.setAttribute("errorCode", ErrorCode.LOGOUT_TOKEN);
-            throw new JwtAuthenticationException(ErrorCode.LOGOUT_TOKEN);
-        }
+                Claims claims = tokenService.parseToken(token);
 
-        try {
-            Claims claims = tokenService.parseToken(token);
+                if (!claims.get("tokenType").equals(TokenType.ACCESS.toString())) {
+                    request.setAttribute("errorCode", ErrorCode.INVALID_TOKEN_TYPE);
+                    throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN_TYPE);
+                }
 
-            if (!claims.get("tokenType").equals(TokenType.ACCESS.toString())) {
-                request.setAttribute("errorCode", ErrorCode.INVALID_TOKEN_TYPE);
-                throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN_TYPE);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } catch (JwtAuthenticationException jwtException) {
+                request.setAttribute("errorCode", jwtException.getErrorCode());
+                throw jwtException;
             }
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            filterChain.doFilter(request, response);
-        } catch (JwtAuthenticationException jwtException) {
-            request.setAttribute("errorCode", jwtException.getErrorCode());
-            throw jwtException;
         }
+        filterChain.doFilter(request, response);
+
     }
 
     private String resolveToken(HttpServletRequest request) {
