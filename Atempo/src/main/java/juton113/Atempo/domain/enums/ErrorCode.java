@@ -15,8 +15,7 @@ public enum ErrorCode {
 
     // Token 관련 예외
     REFRESH_TOKEN_NOT_FOUND("Refresh 토큰이 존재하지 않습니다", HttpStatus.UNAUTHORIZED),
-    // TODO: ATK 필요 시에도 처리할 수 있을 것
-    INVALID_TOKEN_TYPE("잘못된 토큰 종류입니다. Refresh 토큰이 필요합니다.", HttpStatus.UNAUTHORIZED),
+    INVALID_TOKEN_TYPE("잘못된 토큰 종류입니다.", HttpStatus.UNAUTHORIZED),
     TOKEN_EXPIRED("토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
     INVALID_SIGNATURE("토큰의 서명이 올바르지 않습니다.", HttpStatus.UNAUTHORIZED),
     MALFORMED_TOKEN("잘못된 토큰 형식입니다.", HttpStatus.UNAUTHORIZED),
