@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import juton113.Atempo.domain.enums.ErrorCode;
 import juton113.Atempo.domain.enums.TokenType;
-import juton113.Atempo.exception.CustomException;
+import juton113.Atempo.exception.JwtAuthenticationException;
 import juton113.Atempo.service.RedisService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,28 +30,42 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
 
-        if (token != null) {
-            if (redisService.validateBlacklistedToken(token))
-                throw new CustomException(ErrorCode.LOGOUT_TOKEN);
+        if (token == null) {
+            request.setAttribute("errorCode", ErrorCode.TOKEN_EXPIRED);
+            throw new JwtAuthenticationException(ErrorCode.AUTH_HEADER_MISSING);
+        }
 
+        if (redisService.validateBlacklistedToken(token)) {
+            request.setAttribute("errorCode", ErrorCode.LOGOUT_TOKEN);
+            throw new JwtAuthenticationException(ErrorCode.LOGOUT_TOKEN);
+        }
+
+        try {
             Claims claims = tokenService.parseToken(token);
 
-            if (claims.get("tokenType").equals(TokenType.ACCESS.toString())) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (!claims.get("tokenType").equals(TokenType.ACCESS.toString())) {
+                request.setAttribute("errorCode", ErrorCode.INVALID_TOKEN_TYPE);
+                throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN_TYPE);
             }
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            filterChain.doFilter(request, response);
+        } catch (JwtAuthenticationException jwtException) {
+            request.setAttribute("errorCode", jwtException.getErrorCode());
+            throw jwtException;
         }
-        filterChain.doFilter(request, response);
     }
 
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        if (bearerToken == null) {
-            return null;
-        } else if (!bearerToken.startsWith("Bearer ")) {
-            throw new CustomException(ErrorCode.INVALID_AUTH_HEADER_FORMAT);
+        if (bearerToken == null) return null;
+        if (!bearerToken.startsWith("Bearer ")) {
+            request.setAttribute("errorCode", ErrorCode.INVALID_AUTH_HEADER_FORMAT);
+            throw new JwtAuthenticationException(ErrorCode.INVALID_AUTH_HEADER_FORMAT);
         }
 
         return bearerToken.substring(7);
