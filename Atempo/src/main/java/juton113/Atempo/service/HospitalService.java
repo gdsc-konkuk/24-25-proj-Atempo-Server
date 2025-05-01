@@ -16,6 +16,7 @@ public class HospitalService {
     public Hospital createHospital(CreateHospitalDto createHospitalDto) {
         Hospital hospital = Hospital.builder()
                 .admission(createHospitalDto.getAdmission())
+                .name(createHospitalDto.getName())
                 .phoneNumber(createHospitalDto.getPhoneNumber())
                 .address(createHospitalDto.getAddress())
                 .distance(createHospitalDto.getDistance())
