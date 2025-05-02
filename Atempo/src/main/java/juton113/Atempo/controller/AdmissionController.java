@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/admissions")
 public class AdmissionController {
     private final AdmissionService admissionService;
+    private static final int METERS_PER_KILOMETER = 1000;
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
             summary = "입원 요청",
@@ -34,7 +35,7 @@ public class AdmissionController {
                 .builder()
                 .memberId(memberId)
                 .location(createAdmissionRequest.getLocation())
-                .searchRadius(createAdmissionRequest.getSearchRadius())
+                .searchRadius(createAdmissionRequest.getSearchRadius() * METERS_PER_KILOMETER)
                 .patientCondition(createAdmissionRequest.getPatientCondition())
                 .build();
 
@@ -56,7 +57,7 @@ public class AdmissionController {
                 .memberId(memberId)
                 .originalAdmissionId(admissionId)
                 .location(retryAdmissionRequest.getLocation())
-                .searchRadius(retryAdmissionRequest.getSearchRadius())
+                .searchRadius(retryAdmissionRequest.getSearchRadius() * METERS_PER_KILOMETER)
                 .build();
 
         return ResponseEntity.ok(admissionService.retryAdmissionCallByRadius(retryAdmissionDto));
