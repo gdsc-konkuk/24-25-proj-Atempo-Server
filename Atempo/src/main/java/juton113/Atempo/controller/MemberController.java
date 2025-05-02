@@ -1,5 +1,8 @@
 package juton113.Atempo.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import juton113.Atempo.domain.dto.GetMemberResponseDto;
 import juton113.Atempo.domain.dto.UpdateMemberDto;
 import juton113.Atempo.domain.dto.UpdateMemberProfileRequestDto;
@@ -12,19 +15,28 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "사용자 정보", description = "생성, 조회, 수정, 삭제와 관련되 API")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/members")
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping()
+    @Operation(security = @SecurityRequirement(name = "JWT Auth"),
+            summary = "사용자 정보 조회",
+            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 정보를 반환합니다."
+    )
+    @GetMapping("")
     public ResponseEntity<GetMemberResponseDto> getMember(@AuthenticationPrincipal UserDetails userDetails) {
         Long memberId = Long.parseLong(userDetails.getUsername());
 
         return ResponseEntity.ok(memberService.getMember(memberId));
     }
 
+    @Operation(security = @SecurityRequirement(name = "JWT Auth"),
+            summary = "사용자 정보 수정",
+            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 정보를 수정 후 정보를 반환합니다."
+    )
     @PutMapping("/profile")
     public ResponseEntity<GetMemberResponseDto> updateMemberProfile(@AuthenticationPrincipal UserDetails userDetails,
                                                              @RequestBody UpdateMemberProfileRequestDto updateMemberRequestDto) {
@@ -39,6 +51,10 @@ public class MemberController {
         return ResponseEntity.ok(memberService.updateMemberProfile(updateMemberDto));
     }
 
+    @Operation(security = @SecurityRequirement(name = "JWT Auth"),
+            summary = "사용자 권한 수정",
+            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 권한을 수정 후 정보를 반환합니다. - [관리자] 기능"
+    )
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/role")
     public ResponseEntity<GetMemberResponseDto> updateMemberRole(@RequestBody UpdateMemberRoleRequestDto updateMemberRequestDto) {
