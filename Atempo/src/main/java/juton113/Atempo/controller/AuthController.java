@@ -1,6 +1,7 @@
 package juton113.Atempo.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import juton113.Atempo.domain.dto.AccessTokenDto;
@@ -37,7 +38,7 @@ public class AuthController {
             description = "Header의 Authorization에 AccessToken을 담아 제출하면, 로그아웃한 사용자의 AccessToken을 무효화하고 RefreshToken을 삭제합니다."
     )
     @DeleteMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<?> logout(@Parameter(hidden = true) @RequestHeader("Authorization") String authorization) {
         String accessToken = resolveToken(authorization);
         authService.logout(accessToken);
 
@@ -49,7 +50,7 @@ public class AuthController {
             description = "Header의 Authorization에 RefreshToken을 담아 제출하면, 신규 AccessToken을 발급합니다."
     )
     @PostMapping("/access-token")
-    public ResponseEntity<?> reissueAccessToken(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<?> reissueAccessToken(@Parameter(hidden = true) @RequestHeader("Authorization") String authorization) {
         String refreshToken = resolveToken(authorization);
         AccessTokenDto accessTokenDto = authService.reissueAccessToken(refreshToken);
 
@@ -63,7 +64,7 @@ public class AuthController {
             description = "Header의 Authorization에 RefreshToken을 제출하면, 신규 RefreshToken을 발급합니다."
     )
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> reissueRefreshToken(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<?> reissueRefreshToken(@Parameter(hidden = true) @RequestHeader("Authorization") String authorization) {
         String refreshToken = resolveToken(authorization);
         RefreshTokenDto refreshTokenDto = authService.reissueRefreshToken(refreshToken);
 
