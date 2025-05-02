@@ -1,5 +1,7 @@
 package juton113.Atempo.config;
 
+import juton113.Atempo.exception.CustomAccessDeniedHandler;
+import juton113.Atempo.exception.CustomAuthenticationEntryPoint;
 import juton113.Atempo.security.jwt.JwtAuthenticationFilter;
 import juton113.Atempo.security.oauth.CustomOauth2SuccessHandler;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,13 +19,19 @@ public class SecurityConfig {
     private final CorsConfigurationSource corsConfigurationSource;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomOauth2SuccessHandler customOauth2SuccessHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     public SecurityConfig(@Qualifier("customCorsConfigurationSource") CorsConfigurationSource corsConfigurationSource,
                           JwtAuthenticationFilter jwtAuthenticationFilter,
-                          CustomOauth2SuccessHandler customOauth2SuccessHandler) {
+                          CustomOauth2SuccessHandler customOauth2SuccessHandler,
+                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                          CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.corsConfigurationSource = corsConfigurationSource;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customOauth2SuccessHandler = customOauth2SuccessHandler;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -41,11 +49,9 @@ public class SecurityConfig {
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 )
-                // -----[start: h2 console]------
-//                .headers(headers -> headers
-//                        .frameOptions().disable()
-//                )
-                // -----[end: h2 console]-----
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(customOauth2SuccessHandler)
