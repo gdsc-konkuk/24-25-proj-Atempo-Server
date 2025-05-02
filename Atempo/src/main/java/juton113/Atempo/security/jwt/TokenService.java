@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import juton113.Atempo.domain.enums.ErrorCode;
 import juton113.Atempo.domain.enums.TokenType;
+import juton113.Atempo.exception.CustomException;
 import juton113.Atempo.exception.JwtAuthenticationException;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,7 +72,7 @@ public class TokenService {
 
     public void validateTokenType(Claims claims, TokenType expectedTokenType) {
         if (!claims.get("tokenType").equals(expectedTokenType.toString()))
-            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN_TYPE);
+            throw new CustomException (ErrorCode.INVALID_TOKEN_TYPE);
     }
 
     public long getExpiration(String token) {

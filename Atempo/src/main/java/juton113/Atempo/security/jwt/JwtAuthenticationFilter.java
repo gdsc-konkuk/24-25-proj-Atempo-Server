@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -37,11 +38,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     throw new JwtAuthenticationException(ErrorCode.LOGOUT_TOKEN);
                 }
 
+                String requestURI = request.getRequestURI();
                 Claims claims = tokenService.parseToken(token);
 
-                if (!claims.get("tokenType").equals(TokenType.ACCESS.toString())) {
-                    request.setAttribute("errorCode", ErrorCode.INVALID_TOKEN_TYPE);
-                    throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN_TYPE);
+                if (!requestURI.startsWith("/api/v1/auth/access-token") &&
+                        !requestURI.startsWith("/api/v1/auth/refresh-token")) {
+
+                    if (!claims.get("tokenType").equals(TokenType.ACCESS.toString())) {
+                        request.setAttribute("errorCode", ErrorCode.INVALID_TOKEN_TYPE);
+                        throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN_TYPE);
+                    }
                 }
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
