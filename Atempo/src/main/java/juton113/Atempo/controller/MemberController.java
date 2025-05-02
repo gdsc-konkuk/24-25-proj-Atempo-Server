@@ -53,7 +53,7 @@ public class MemberController {
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
             summary = "사용자 권한 수정",
-            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 권한을 수정 후 정보를 반환합니다."
+            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 권한을 수정 후 정보를 반환합니다. - [관리자] 기능"
     )
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/role")
