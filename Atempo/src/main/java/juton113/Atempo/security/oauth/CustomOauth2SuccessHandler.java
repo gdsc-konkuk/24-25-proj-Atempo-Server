@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
@@ -30,13 +31,12 @@ public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler 
         AccessTokenDto accessTokenDto = authService.issueAccessToken(memberId);
         RefreshTokenDto refreshTokenDto = authService.issueRefreshToken(memberId);
 
-        response.setHeader("Authorization", "Bearer " + accessTokenDto.getAccessToken());
-        response.setHeader("X-Refresh-Token", "Bearer " + refreshTokenDto.getRefreshToken());
+        String redirectUri = UriComponentsBuilder.fromUriString("medicall://auth")
+                .queryParam("atk", accessTokenDto.getAccessToken())
+                .queryParam("rtk", refreshTokenDto.getRefreshToken())
+                .build()
+                .toUriString();
 
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        response.setContentType("text/plain");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("Login success");
+        response.sendRedirect(redirectUri);
     }
 }
