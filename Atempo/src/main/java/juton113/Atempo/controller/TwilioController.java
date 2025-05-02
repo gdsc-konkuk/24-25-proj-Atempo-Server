@@ -3,6 +3,7 @@ package juton113.Atempo.controller;
 import com.twilio.twiml.VoiceResponse;
 import com.twilio.twiml.voice.Hangup;
 import com.twilio.twiml.voice.Say;
+import io.swagger.v3.oas.annotations.Hidden;
 import juton113.Atempo.domain.dto.UpdateHospitalCallStatusDto;
 import juton113.Atempo.service.HospitalCallStatusService;
 import juton113.Atempo.service.TwilioService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Hidden
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/twilio")
