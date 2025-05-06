@@ -3,10 +3,7 @@ package juton113.Atempo.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import juton113.Atempo.domain.dto.GetMemberResponseDto;
-import juton113.Atempo.domain.dto.UpdateMemberDto;
-import juton113.Atempo.domain.dto.UpdateMemberProfileRequestDto;
-import juton113.Atempo.domain.dto.UpdateMemberRoleRequestDto;
+import juton113.Atempo.domain.dto.*;
 import juton113.Atempo.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +46,23 @@ public class MemberController {
                 .build();
 
         return ResponseEntity.ok(memberService.updateMemberProfile(updateMemberDto));
+    }
+
+    @Operation(security = @SecurityRequirement(name = "JWT Auth"),
+            summary = "자격증 정보 수정",
+            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 자격증을 수정 후 정보를 반환합니다."
+    )
+    @PutMapping("/certification")
+    public ResponseEntity<GetMemberResponseDto> updateMemberCertificationInfo(@AuthenticationPrincipal UserDetails userDetails,
+                                                                              @RequestBody UpdateMemberCertificationInfoRequest updateMemberCertificationInfoRequest) {
+        Long memberId = Long.parseLong(userDetails.getUsername());
+        UpdateMemberCertificationInfoDto updateMemberCertificationInfoDto = UpdateMemberCertificationInfoDto.builder()
+                .memberId(memberId)
+                .certificationType(updateMemberCertificationInfoRequest.getCertificationType())
+                .certificationNumber(updateMemberCertificationInfoRequest.getCertificationNumber())
+                .build();
+
+        return ResponseEntity.ok(memberService.updateMemberCertification(updateMemberCertificationInfoDto));
     }
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
