@@ -34,7 +34,7 @@ public class MemberController {
             summary = "사용자 정보 수정",
             description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 정보를 수정 후 정보를 반환합니다."
     )
-    @PutMapping("/profile")
+    @PutMapping("/profile") // TODO: fix http method PUT -> PATCH
     public ResponseEntity<GetMemberResponseDto> updateMemberProfile(@AuthenticationPrincipal UserDetails userDetails,
                                                              @RequestBody UpdateMemberProfileRequestDto updateMemberRequestDto) {
         Long memberId = Long.parseLong(userDetails.getUsername());
@@ -52,7 +52,7 @@ public class MemberController {
             summary = "자격증 정보 수정",
             description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 자격증을 수정 후 정보를 반환합니다."
     )
-    @PutMapping("/certification")
+    @PatchMapping("/certification")
     public ResponseEntity<GetMemberResponseDto> updateMemberCertificationInfo(@AuthenticationPrincipal UserDetails userDetails,
                                                                               @RequestBody UpdateMemberCertificationInfoRequest updateMemberCertificationInfoRequest) {
         Long memberId = Long.parseLong(userDetails.getUsername());
@@ -70,7 +70,7 @@ public class MemberController {
             description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 권한을 수정 후 정보를 반환합니다. - [관리자] 기능"
     )
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping("/role")
+    @PutMapping("/role") // TODO: fix http method PUT -> PATCH
     public ResponseEntity<GetMemberResponseDto> updateMemberRole(@RequestBody UpdateMemberRoleRequestDto updateMemberRequestDto) {
         return ResponseEntity.ok(memberService.updateMemberRole(updateMemberRequestDto));
     }
