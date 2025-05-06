@@ -1,9 +1,6 @@
 package juton113.Atempo.service;
 
-import juton113.Atempo.domain.dto.CreateMemberDto;
-import juton113.Atempo.domain.dto.GetMemberResponseDto;
-import juton113.Atempo.domain.dto.UpdateMemberDto;
-import juton113.Atempo.domain.dto.UpdateMemberRoleRequestDto;
+import juton113.Atempo.domain.dto.*;
 import juton113.Atempo.domain.entity.Member;
 import juton113.Atempo.domain.enums.ErrorCode;
 import juton113.Atempo.domain.enums.Role;
@@ -51,6 +48,8 @@ public class MemberService {
                 .email(member.getEmail())
                 .profileUrl(member.getProfileUrl())
                 .role(member.getRole())
+                .certificationType(member.getCertificationType())
+                .certificationNumber(member.getCertificationNumber())
                 .build();
 
     }
@@ -68,6 +67,8 @@ public class MemberService {
                 .email(member.getEmail())
                 .profileUrl(member.getProfileUrl())
                 .role(member.getRole())
+                .certificationType(member.getCertificationType())
+                .certificationNumber(member.getCertificationNumber())
                 .build();
     }
 
@@ -82,6 +83,24 @@ public class MemberService {
                 .email(member.getEmail())
                 .profileUrl(member.getProfileUrl())
                 .role(member.getRole())
+                .certificationType(member.getCertificationType())
+                .certificationNumber(member.getCertificationNumber())
+                .build();
+    }
+
+    @Transactional
+    public GetMemberResponseDto updateMemberCertification(UpdateMemberCertificationInfoDto updateMemberCertificationInfoDto) {
+        Member member = findByMemberId(updateMemberCertificationInfoDto.getMemberId());
+        member.updateCertificationInfo(updateMemberCertificationInfoDto.getCertificationType(), updateMemberCertificationInfoDto.getCertificationNumber());
+
+        return GetMemberResponseDto.builder()
+                .name(member.getName())
+                .nickName(member.getNickName())
+                .email(member.getEmail())
+                .profileUrl(member.getProfileUrl())
+                .role(member.getRole())
+                .certificationType(member.getCertificationType())
+                .certificationNumber(member.getCertificationNumber())
                 .build();
     }
 
