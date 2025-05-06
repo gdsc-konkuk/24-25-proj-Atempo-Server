@@ -26,7 +26,10 @@ public class Member extends BaseTimeEntity {
     String nickName;
     String email;
     String profileUrl;
+
+    @Enumerated(EnumType.STRING)
     CertificationType certificationType;
+
     String certificationNumber;
 
     @Enumerated(EnumType.STRING)
