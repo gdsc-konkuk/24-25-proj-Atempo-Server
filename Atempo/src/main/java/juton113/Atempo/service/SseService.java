@@ -1,6 +1,6 @@
 package juton113.Atempo.service;
 
-import juton113.Atempo.domain.dto.HospitalResponseDto;
+import juton113.Atempo.domain.dto.HospitalInfoResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -38,14 +38,14 @@ public class SseService {
         return emitter;
     }
 
-    public void sendHospitalInfo(Long memberId, HospitalResponseDto hospitalResponseDto) {
+    public void sendHospitalInfo(Long memberId, HospitalInfoResponse hospitalInfoResponse) {
         SseEmitter emitter = emitters.get(memberId);
 
         if(emitter != null) {
             try {
                 emitter.send(SseEmitter.event()
-                        .name("HOSPITAL_RESPONSE")
-                        .data(hospitalResponseDto));
+                        .name("HOSPITAL_INFO_RESPONSE")
+                        .data(hospitalInfoResponse));
             } catch (IOException e) {
                 emitter.completeWithError(e);
                 emitters.remove(memberId);

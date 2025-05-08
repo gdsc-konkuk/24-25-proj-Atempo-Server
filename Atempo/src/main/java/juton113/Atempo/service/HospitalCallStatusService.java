@@ -2,7 +2,7 @@ package juton113.Atempo.service;
 
 import jakarta.transaction.Transactional;
 import juton113.Atempo.domain.dto.CreateHospitalCallStatusDto;
-import juton113.Atempo.domain.dto.HospitalResponseDto;
+import juton113.Atempo.domain.dto.HospitalInfoResponse;
 import juton113.Atempo.domain.dto.UpdateHospitalCallStatusDto;
 import juton113.Atempo.domain.entity.Hospital;
 import juton113.Atempo.domain.entity.HospitalCallStatus;
@@ -48,7 +48,7 @@ public class HospitalCallStatusService {
         if(!digit.equals("1")) return;
 
         Hospital hospital = callStatus.getHospital();
-        HospitalResponseDto hospitalResponseDto = HospitalResponseDto.builder()
+        HospitalInfoResponse hospitalInfoResponse = HospitalInfoResponse.builder()
                 .name(hospital.getName())
                 .phoneNumber(hospital.getPhoneNumber())
                 .address(hospital.getAddress())
@@ -56,8 +56,8 @@ public class HospitalCallStatusService {
                 .travelTime(hospital.getTravelTime())
                 .departments(hospital.getDepartments())
                 .build();
-        Long memberId = hospital.getAdmission().getAdmissionId();
-        sseService.sendHospitalInfo(memberId, hospitalResponseDto);
+        Long memberId = hospital.getAdmission().getMember().getMemberId();
+        sseService.sendHospitalInfo(memberId, hospitalInfoResponse);
 
     }
 }
