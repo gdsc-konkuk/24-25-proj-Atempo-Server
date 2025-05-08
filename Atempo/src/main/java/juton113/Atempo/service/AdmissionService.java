@@ -14,6 +14,7 @@ import juton113.Atempo.repository.AdmissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -39,9 +40,13 @@ public class AdmissionService {
                 createAdmissionDto.getPatientCondition(),
                 null);
 
-        processAdmissionCall(admission);
-
         admissionRepository.save(admission);
+
+        // -----[send mock response]-----
+        List<String> callIds = processAdmissionCall(admission);
+
+        sendMockHospitalResponses(callIds);
+        //
 
         return CreateAdmissionResponse.builder().admissionId(admission.getAdmissionId()).build();
     }
@@ -59,14 +64,18 @@ public class AdmissionService {
                 originalAdmission.getPatientCondition(),
                 originalAdmissionId);
 
-        processAdmissionCall(admission);
-
         admissionRepository.save(admission);
+
+        // -----[send mock response]-----
+        List<String> callIds = processAdmissionCall(admission);
+
+        sendMockHospitalResponses(callIds);
+        //
 
         return CreateAdmissionResponse.builder().admissionId(admission.getAdmissionId()).build();
     }
 
-    private void processAdmissionCall(Admission admission) {
+    private List<String> processAdmissionCall(Admission admission) {
         // request hospital list and ars message to ml-server
         MlCreateAdmissionRequest request = MlCreateAdmissionRequest.builder()
                 .location(admission.getLocation())
@@ -87,6 +96,8 @@ public class AdmissionService {
                 .build();
         admissionMessageService.createAdmissionMessage(createAdmissionMessageDto);
 
+        List<String> callIds = new ArrayList<>();
+
         // request twilio call
         for(HospitalInfo hospitalInfo : hospitalInfoList) {
             String hospitalPhoneNumber = hospitalInfo.getPhoneNumber();
@@ -94,6 +105,7 @@ public class AdmissionService {
 //            String callId = twilioService.createCall(hospitalNumber, arsMessage);
             // TODO: 실제 서비스 시, 위의 주석을 해제하고 createMockCall를 호출하는 라인은 지울 것
             String callId = twilioService.createMockCall(hospitalPhoneNumber, arsMessage);
+            callIds.add(callId);
 
             CreateHospitalDto createHospitalDto = CreateHospitalDto.builder()
                     .admission(admission)
@@ -118,6 +130,19 @@ public class AdmissionService {
                     .build();
 
             hospitalCallStatusService.createHospitalCallStatus(createHospitalCallStatusDto);
+        }
+
+        return callIds;
+    }
+
+    private void sendMockHospitalResponses(List<String> callIds) {
+        for (String callId : callIds) {
+            UpdateHospitalCallStatusDto updateHospitalCallStatusDto = UpdateHospitalCallStatusDto.builder()
+                    .callId(callId)
+                    .responseDigit("1")
+                    .build();
+
+            hospitalCallStatusService.updateHospitalCallStatus(updateHospitalCallStatusDto);
         }
     }
 }
