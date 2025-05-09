@@ -2,6 +2,7 @@ package juton113.Atempo.domain.entity;
 
 import jakarta.persistence.*;
 import juton113.Atempo.auditing.BaseTimeEntity;
+import juton113.Atempo.domain.enums.CertificationType;
 import juton113.Atempo.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,11 @@ public class Member extends BaseTimeEntity {
     String profileUrl;
 
     @Enumerated(EnumType.STRING)
+    CertificationType certificationType;
+
+    String certificationNumber;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public void updateProfile(String name,
@@ -39,5 +45,10 @@ public class Member extends BaseTimeEntity {
 
     public void updateRole(Role role) {
         this.role = role;
+    }
+
+    public void updateCertificationInfo(CertificationType certificationType, String certificationNumber) {
+        this.certificationType = certificationType;
+        this.certificationNumber = certificationNumber;
     }
 }

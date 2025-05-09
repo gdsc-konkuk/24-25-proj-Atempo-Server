@@ -1,0 +1,630 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API 문서",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "SSE 통신",
+      "description": "SSE 통신과 관련된 API"
+    },
+    {
+      "name": "사용자 정보",
+      "description": "생성, 조회, 수정, 삭제와 관련되 API"
+    },
+    {
+      "name": "입원 요청",
+      "description": "입원 요청과 관련된 API"
+    },
+    {
+      "name": "인증, 인가",
+      "description": "로그인, 토큰 발급과 관련된 API"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/refresh-token": {
+      "post": {
+        "tags": [
+          "인증, 인가"
+        ],
+        "summary": "RefreshToken 토큰 발급",
+        "description": "Header의 Authorization에 RefreshToken을 제출하면, 신규 RefreshToken을 발급합니다.",
+        "operationId": "reissueRefreshToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/access-token": {
+      "post": {
+        "tags": [
+          "인증, 인가"
+        ],
+        "summary": "AccessToken 발급",
+        "description": "Header의 Authorization에 RefreshToken을 담아 제출하면, 신규 AccessToken을 발급합니다.",
+        "operationId": "reissueAccessToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admissions": {
+      "post": {
+        "tags": [
+          "입원 요청"
+        ],
+        "summary": "입원 요청",
+        "description": "Header의 Authorization에 AccessToken을 담아 제출하면, 환자의 증상, 위치, 탐색 범위를 기반으로 병원을 검색 후 연락 결과를 반환합니다. - [관리자, 인증된 사용자] 기능",
+        "operationId": "createAdmission",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdmissionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAdmissionResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admissions/{admissionId}/retry": {
+      "post": {
+        "tags": [
+          "입원 요청"
+        ],
+        "summary": "입원 재요청",
+        "description": "Header의 Authorization에 AccessToken을 담아 제출하면, 이전의 입원 요청을 기반으로 병원을 검색 후 연락 결과를 반환합니다. - [관리자, 인증된 사용자] 기능",
+        "operationId": "retryAdmissionWithRadius",
+        "parameters": [
+          {
+            "name": "admissionId",
+            "in": "path",
+            "description": "이전 입원 요청의 id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetryAdmissionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAdmissionResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/members/role": {
+      "patch": {
+        "tags": [
+          "사용자 정보"
+        ],
+        "summary": "사용자 권한 수정",
+        "description": "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 권한을 수정 후 정보를 반환합니다. - [관리자] 기능",
+        "operationId": "updateMemberRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMemberRoleRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMemberResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/members/profile": {
+      "patch": {
+        "tags": [
+          "사용자 정보"
+        ],
+        "summary": "사용자 정보 수정",
+        "description": "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 정보를 수정 후 정보를 반환합니다.",
+        "operationId": "updateMemberProfile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMemberProfileRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMemberResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/members/certification": {
+      "patch": {
+        "tags": [
+          "사용자 정보"
+        ],
+        "summary": "자격증 정보 수정",
+        "description": "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 자격증을 수정 후 정보를 반환합니다.",
+        "operationId": "updateMemberCertificationInfo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMemberCertificationInfoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMemberResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/notifications/subscribe": {
+      "get": {
+        "tags": [
+          "SSE 통신"
+        ],
+        "summary": "SSE 연결 구독 요청",
+        "description": "Header의 Authorization에 AccessToken을 담아 제출하면, 사용자별 SSE 알림 스트림을 구독합니다. - [관리자, 인증된 사용자] 기능",
+        "operationId": "subscribe",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/SseEmitter"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/members": {
+      "get": {
+        "tags": [
+          "사용자 정보"
+        ],
+        "summary": "사용자 정보 조회",
+        "description": "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 정보를 반환합니다.",
+        "operationId": "getMember",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMemberResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "get": {
+        "tags": [
+          "인증, 인가"
+        ],
+        "summary": "로그인",
+        "description": "Oauth 로그인을 위한 EndPoint를 반환합니다.",
+        "operationId": "login",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/refresh-token/{memberId}": {
+      "delete": {
+        "tags": [
+          "인증, 인가"
+        ],
+        "summary": "RefreshToken BlackList 처리",
+        "description": "특정 사용자의 신규 AccessToken 발급을 제한합니다. - [관리자] 기능",
+        "operationId": "invalidateRefreshToken",
+        "parameters": [
+          {
+            "name": "memberId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "delete": {
+        "tags": [
+          "인증, 인가"
+        ],
+        "summary": "로그아웃",
+        "description": "Header의 Authorization에 AccessToken을 담아 제출하면, 로그아웃한 사용자의 AccessToken을 무효화하고 RefreshToken을 삭제합니다.",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Auth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateAdmissionRequest": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "search_radius": {
+            "type": "integer",
+            "format": "int32",
+            "example": 5
+          },
+          "patient_condition": {
+            "type": "string",
+            "example": "test_patient_condition"
+          }
+        }
+      },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "example": 12.345
+          },
+          "longitude": {
+            "type": "number",
+            "example": 12.345
+          }
+        }
+      },
+      "CreateAdmissionResponse": {
+        "type": "object",
+        "properties": {
+          "admissionId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          }
+        }
+      },
+      "RetryAdmissionRequest": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "search_radius": {
+            "type": "integer",
+            "format": "int32",
+            "example": 5
+          }
+        }
+      },
+      "UpdateMemberRoleRequestDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "example": "ADMIN",
+            "enum": [
+              "BASIC",
+              "VERIFIED",
+              "ADMIN"
+            ]
+          },
+          "member_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          }
+        }
+      },
+      "GetMemberResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "tester_name"
+          },
+          "email": {
+            "type": "string",
+            "example": "tester@gmail.com"
+          },
+          "role": {
+            "type": "string",
+            "example": "ADMIN",
+            "enum": [
+              "BASIC",
+              "VERIFIED",
+              "ADMIN"
+            ]
+          },
+          "nick_name": {
+            "type": "string",
+            "example": "tester_nick_name"
+          },
+          "profile_url": {
+            "type": "string",
+            "example": "https://lh3.googleusercontent.com/a/abcd..."
+          },
+          "certification_type": {
+            "type": "string",
+            "example": "KOREA",
+            "enum": [
+              "NREMT",
+              "KOREA",
+              "EMS"
+            ]
+          },
+          "certification_number": {
+            "type": "string",
+            "example": "MED911,123456,123456789012"
+          }
+        }
+      },
+      "UpdateMemberProfileRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "tester"
+          },
+          "nick_name": {
+            "type": "string",
+            "example": "tester_nick_name"
+          },
+          "profile_url": {
+            "type": "string",
+            "example": "https://lh3.googleusercontent.com/a/abcd..."
+          }
+        }
+      },
+      "UpdateMemberCertificationInfoRequest": {
+        "type": "object",
+        "properties": {
+          "certification_type": {
+            "type": "string",
+            "example": "KOREA",
+            "enum": [
+              "NREMT",
+              "KOREA",
+              "EMS"
+            ]
+          },
+          "certification_number": {
+            "type": "string",
+            "example": "MED911,123456,123456789012"
+          }
+        }
+      },
+      "SseEmitter": {
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "OAuth 로그인 URL 반환"
+          },
+          "loginUrl": {
+            "type": "string",
+            "example": "/oauth2/authorization/google"
+          }
+        }
+      },
+      "HospitalInfoResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "example": "test_name"
+          },
+          "phoneNumber": {
+            "example": "+82123-456"
+          },
+          "address": {
+            "example": "test_address"
+          },
+          "distance": {
+            "example": 2
+          },
+          "travelTime": {
+            "example": 20
+          },
+          "departments": {
+            "example": "department1,department2,department3"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWT Auth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
