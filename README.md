@@ -57,10 +57,14 @@ automatically recommend the first available hospital that responds.
 </p>
 
 
-## 3. System Architecture
+## 3. Architecture
 
 ---
+## BackEnd System Architecture
 ![Atempo_BackEnd_Architecture_v1.png](./docs/Atempo_BackEnd_Architecture_v1.png)
+
+## Atempo Service Architecture
+![Atempo_Service_Architecture_v1.png](./docs/Atempo_Service_Architecture_v1.png)
 
 ## 4. Service Flow
 
