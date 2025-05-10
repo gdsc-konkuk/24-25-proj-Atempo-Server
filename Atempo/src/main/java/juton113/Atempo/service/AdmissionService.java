@@ -6,6 +6,7 @@ import juton113.Atempo.domain.dto.common.HospitalInfo;
 import juton113.Atempo.domain.entity.Admission;
 import juton113.Atempo.domain.entity.Hospital;
 import juton113.Atempo.domain.entity.Member;
+import juton113.Atempo.domain.enums.AdmissionStatus;
 import juton113.Atempo.domain.enums.CallResponseStatus;
 import juton113.Atempo.domain.enums.CallStatus;
 import juton113.Atempo.domain.enums.ErrorCode;
@@ -44,11 +45,20 @@ public class AdmissionService {
 
         // -----[send mock response]-----
         List<String> callIds = processAdmissionCall(admission);
+        if (callIds.isEmpty()) {
+            return CreateAdmissionResponse.builder()
+                    .admissionId(admission.getAdmissionId())
+                    .admissionStatus(AdmissionStatus.NO_HOSPITAL_FOUND)
+                    .build();
+        }
 
         sendMockHospitalResponses(callIds);
         //
 
-        return CreateAdmissionResponse.builder().admissionId(admission.getAdmissionId()).build();
+        return CreateAdmissionResponse.builder()
+                .admissionId(admission.getAdmissionId())
+                .admissionStatus(AdmissionStatus.SUCCESS)
+                .build();
     }
 
     @Transactional
@@ -68,11 +78,20 @@ public class AdmissionService {
 
         // -----[send mock response]-----
         List<String> callIds = processAdmissionCall(admission);
+        if (callIds.isEmpty()) {
+            return CreateAdmissionResponse.builder()
+                    .admissionId(admission.getAdmissionId())
+                    .admissionStatus(AdmissionStatus.NO_HOSPITAL_FOUND)
+                    .build();
+        }
 
         sendMockHospitalResponses(callIds);
         //
 
-        return CreateAdmissionResponse.builder().admissionId(admission.getAdmissionId()).build();
+        return CreateAdmissionResponse.builder()
+                .admissionId(admission.getAdmissionId())
+                .admissionStatus(AdmissionStatus.SUCCESS)
+                .build();
     }
 
     private List<String> processAdmissionCall(Admission admission) {
@@ -85,6 +104,9 @@ public class AdmissionService {
         MlCreateAdmissionResponse response = mlServerService.requestAdmissionData(request);
         // TODO:  실제 서비스 시, 위의 주석을 해제하고 requestAdmissionMockData를 호출하는 라인은 지울 것
 //        MlCreateAdmissionResponse response = mlServerService.requestAdmissionMockData(request);
+        if (response.getHospitalList().isEmpty()) {
+            return new ArrayList<>();
+        }
 
         List<HospitalInfo> hospitalInfoList = response.getHospitalList();
         String arsMessage = response.getArsMessage();

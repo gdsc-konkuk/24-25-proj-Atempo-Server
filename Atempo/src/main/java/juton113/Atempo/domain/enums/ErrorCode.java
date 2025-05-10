@@ -29,7 +29,11 @@ public enum ErrorCode {
     INVALID_AUTH_HEADER_FORMAT("Authorization 헤더의 형식이 잘못되었습니다", HttpStatus.UNAUTHORIZED),
 
     // HospitalCallStatus
-    HOSPITAL_CALL_STATUS_NOT_FOUND("입원 전화 상태를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    HOSPITAL_CALL_STATUS_NOT_FOUND("입원 전화 상태를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+
+    // ML 서버 관련 에러 (통합)
+    ML_SERVER_ERROR("ML 서버와의 통신 중 문제가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    ML_BAD_REQUEST("ML 서버로 잘못된 요청이 전송되었습니다.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus httpStatus;
