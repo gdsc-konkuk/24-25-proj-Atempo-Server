@@ -36,7 +36,6 @@ automatically recommend the first available hospital that responds.
 
 ### 🔗 Communication Protocols
 <p>
-    A
     <img src="https://img.shields.io/badge/HTTP-4285F4?style=for-the-badge&logoColor=white">
     <img src="https://img.shields.io/badge/SSE-1E90FF?style=for-the-badge">
 </p>
