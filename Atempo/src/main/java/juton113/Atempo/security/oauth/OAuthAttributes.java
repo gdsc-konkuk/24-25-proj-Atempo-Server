@@ -31,7 +31,7 @@ public class OAuthAttributes {
                         (String) attributes.get("picture")
                 );
             default:
-                throw new RuntimeException("지원하지 않는 OAuth Provider: " + provider);
+                throw new RuntimeException("Unsupported OAuth provider: " + provider);
         }
     }
 }

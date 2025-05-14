@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-@Tag(name = "SSE 통신", description = "SSE 통신과 관련된 API")
+@Tag(name = "SSE Communication", description = "SSE Communication APIs")
 @AllArgsConstructor
 @RequestMapping("/api/v1/notifications")
 @RestController
@@ -22,8 +22,8 @@ public class SseController {
     private final SseService sseService;
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "SSE 연결 구독 요청",
-            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 사용자별 SSE 알림 스트림을 구독합니다. - [관리자, 인증된 사용자] 기능"
+            summary = "Subscribe to SSE Connection",
+            description = "Subscribes to the SSE notification stream. – [Admins, Verified Users Only]"
     )
     @PreAuthorize("hasAnyRole('ADMIN', VERIFIED)")
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

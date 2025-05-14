@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "인증, 인가", description = "로그인, 토큰 발급과 관련된 API")
+@Tag(name = "Authentication, Authorization", description = "APIs related to login and token")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -24,18 +24,18 @@ public class AuthController {
     private final AuthService authService;
     private final TokenService tokenService;
 
-    @Operation(summary = "로그인",
-            description = "Oauth 로그인을 위한 EndPoint를 반환합니다.")
+    @Operation(summary = "Login",
+            description = "Returns an endpoint for OAuth login.")
     @GetMapping("/login")
     public ResponseEntity<LoginResponseDto> login() {
         String loginUrl = "/oauth2/authorization/google";
 
-        return ResponseEntity.ok(new LoginResponseDto("OAuth 로그인 EndPoint 반환", loginUrl));
+        return ResponseEntity.ok(new LoginResponseDto("Returns OAuth login endpoint.", loginUrl));
     }
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "로그아웃",
-            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 로그아웃한 사용자의 AccessToken을 무효화하고 RefreshToken을 삭제합니다."
+            summary = "Logout",
+            description = "Invalidates the user's AccessToken upon logout and deletes the associated RefreshToken."
     )
     @DeleteMapping("/logout")
     public ResponseEntity<?> logout(@Parameter(hidden = true) @RequestHeader("Authorization") String authorization) {
@@ -46,8 +46,8 @@ public class AuthController {
     }
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "AccessToken 발급",
-            description = "Header의 Authorization에 RefreshToken을 담아 제출하면, 신규 AccessToken을 발급합니다."
+            summary = "Issues AccessToken",
+            description = "Issues a new AccessToken when a RefreshToken is submitted in the Authorization header."
     )
     @PostMapping("/access-token")
     public ResponseEntity<?> reissueAccessToken(@Parameter(hidden = true) @RequestHeader("Authorization") String authorization) {
@@ -60,8 +60,8 @@ public class AuthController {
     }
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "RefreshToken 토큰 발급",
-            description = "Header의 Authorization에 RefreshToken을 제출하면, 신규 RefreshToken을 발급합니다."
+            summary = "Issues RefreshToken",
+            description = "Issues a new RefreshToken when a RefreshToken is submitted in the Authorization header."
     )
     @PostMapping("/refresh-token")
     public ResponseEntity<?> reissueRefreshToken(@Parameter(hidden = true) @RequestHeader("Authorization") String authorization) {
@@ -74,8 +74,8 @@ public class AuthController {
     }
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "RefreshToken BlackList 처리",
-            description = "특정 사용자의 신규 AccessToken 발급을 제한합니다. - [관리자] 기능"
+            summary = "Handles RefreshToken blacklisting",
+            description = "Restricts the issuance of a new AccessToken for a specific user. – [Admin Only]"
     )
     @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/refresh-token/{memberId}")

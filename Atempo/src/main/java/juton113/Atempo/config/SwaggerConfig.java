@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(title = "API 문서", version = "v1")
+        info = @Info(title = "API Documentation", version = "v1")
 )
 
 @SecurityScheme(

@@ -12,7 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "사용자 정보", description = "생성, 조회, 수정, 삭제와 관련되 API")
+@Tag(name = "Member Info", description = "APIs related to member CRUD")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/members")
@@ -20,8 +20,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "사용자 정보 조회",
-            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 정보를 반환합니다."
+            summary = "Get User Information",
+            description = "Returns the user's information."
     )
     @GetMapping("")
     public ResponseEntity<GetMemberResponseDto> getMember(@AuthenticationPrincipal UserDetails userDetails) {
@@ -31,8 +31,8 @@ public class MemberController {
     }
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "사용자 정보 수정",
-            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 정보를 수정 후 정보를 반환합니다."
+            summary = "Update User Information",
+            description = "Updates the user's information and returns the updated data."
     )
     @PatchMapping("/profile")
     public ResponseEntity<GetMemberResponseDto> updateMemberProfile(@AuthenticationPrincipal UserDetails userDetails,
@@ -49,8 +49,8 @@ public class MemberController {
     }
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "자격증 정보 수정",
-            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 자격증을 수정 후 정보를 반환합니다."
+            summary = "Update Certification Information",
+            description = "Updates the user's certification information and returns the updated data."
     )
     @PatchMapping("/certification")
     public ResponseEntity<GetMemberResponseDto> updateMemberCertificationInfo(@AuthenticationPrincipal UserDetails userDetails,
@@ -66,8 +66,8 @@ public class MemberController {
     }
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "사용자 권한 수정",
-            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 해당 사용자의 권한을 수정 후 정보를 반환합니다. - [관리자] 기능"
+            summary = "Update User Role",
+            description = "Updates the user's role and returns the updated data. – [Admin Only]"
     )
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PatchMapping("/role")

@@ -13,7 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "입원 요청", description = "입원 요청과 관련된 API")
+@Tag(name = "Admission Request", description = "Admission Request APIs")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/admissions")
@@ -22,8 +22,8 @@ public class AdmissionController {
     private static final int METERS_PER_KILOMETER = 1000;
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "입원 요청",
-            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 환자의 증상, 위치, 탐색 범위를 기반으로 병원을 검색 후 연락 결과를 반환합니다. - [관리자, 인증된 사용자] 기능"
+            summary = "Admission Request",
+            description = "Searches for hospitals based on the patient's symptoms, location, and search radius, then returns the result of the contact attempt. - [Admins, Verified Users Only]"
     )
     @PreAuthorize("hasAnyRole('ADMIN', VERIFIED)")
     @PostMapping("")
@@ -43,13 +43,13 @@ public class AdmissionController {
     }
 
     @Operation(security = @SecurityRequirement(name = "JWT Auth"),
-            summary = "입원 재요청",
-            description = "Header의 Authorization에 AccessToken을 담아 제출하면, 이전의 입원 요청을 기반으로 병원을 검색 후 연락 결과를 반환합니다. - [관리자, 인증된 사용자] 기능"
+            summary = "Re-admission Request",
+            description = "Searches for hospitals based on the previous admission request and returns the result of the contact attempt. – [Admins, Verified Users Only]"
     )
     @PreAuthorize("hasAnyRole('ADMIN', VERIFIED)")
     @PostMapping("/{admissionId}/retry")
     public ResponseEntity<CreateAdmissionResponse> retryAdmissionWithRadius(@AuthenticationPrincipal UserDetails userDetails,
-                                                                            @Parameter(description = "이전 입원 요청의 id")@PathVariable Long admissionId,
+                                                                            @Parameter(description = "previous admission request id")@PathVariable Long admissionId,
                                                                             @RequestBody RetryAdmissionRequest retryAdmissionRequest) {
         Long memberId = Long.parseLong(userDetails.getUsername());
 

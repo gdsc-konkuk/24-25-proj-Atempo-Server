@@ -37,18 +37,18 @@ public class GlobalExceptionHandler {
         if (httpMessageNotReadableException.getCause() instanceof InvalidFormatException) {
             return invalidEnumResponse();
         }
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "BAD_REQUEST", "요청 값을 확인해주세요.");
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "BAD_REQUEST", "Please check the request values.");
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException(Exception exception) {
         logger.error("[Unhandled Exception]", exception);
 
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "서버 내부 오류가 발생했습니다.");
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "An internal server error occurred.");
     }
 
     private ResponseEntity<ErrorResponse> invalidEnumResponse() {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "INVALID_ENUM", "유효하지 않은 값이 입력되었습니다.");
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "INVALID_ENUM", "Invalid value provided.");
     }
 
     private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String code, String message) {
