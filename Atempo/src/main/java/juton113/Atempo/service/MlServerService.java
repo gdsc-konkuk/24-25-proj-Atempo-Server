@@ -4,10 +4,14 @@ import jakarta.transaction.Transactional;
 import juton113.Atempo.domain.dto.MlCreateAdmissionRequest;
 import juton113.Atempo.domain.dto.MlCreateAdmissionResponse;
 import juton113.Atempo.domain.dto.common.HospitalInfo;
+import juton113.Atempo.domain.enums.ErrorCode;
+import juton113.Atempo.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -27,14 +31,20 @@ public class MlServerService {
 
         HttpEntity<MlCreateAdmissionRequest> entity = new HttpEntity<>(request, headers);
 
-        ResponseEntity<MlCreateAdmissionResponse> response = restTemplate.exchange(
-                mlServerUrl,
-                HttpMethod.POST,
-                entity,
-                MlCreateAdmissionResponse.class
-        );
+        try {
+            ResponseEntity<MlCreateAdmissionResponse> response = restTemplate.exchange(
+                    mlServerUrl,
+                    HttpMethod.POST,
+                    entity,
+                    MlCreateAdmissionResponse.class
+            );
 
-        return response.getBody();
+            return response.getBody();
+        } catch (HttpClientErrorException e) {
+            throw new CustomException(ErrorCode.ML_BAD_REQUEST);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.ML_SERVER_ERROR);
+        }
     }
 
     public MlCreateAdmissionResponse requestAdmissionMockData(MlCreateAdmissionRequest request) {

@@ -34,9 +34,17 @@ automatically recommend the first available hospital that responds.
     <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
 </p>
 
-### 🔗 Communication
+### 🔗 Communication Protocols
 <p>
-    <img src="https://img.shields.io/badge/SSE-000000?style=for-the-badge">
+    A
+    <img src="https://img.shields.io/badge/HTTP-4285F4?style=for-the-badge&logoColor=white">
+    <img src="https://img.shields.io/badge/SSE-1E90FF?style=for-the-badge">
+</p>
+
+### 🛠️ API Frameworks & Design
+<p>
+    <img src="https://img.shields.io/badge/REST API-3E4EE3?style=for-the-badge">
+    <img src="https://img.shields.io/badge/Fast API-009688?style=for-the-badge&logo=fastapi&logoColor=white">
 </p>
 
 ### 🌐 Third-Party Integration
