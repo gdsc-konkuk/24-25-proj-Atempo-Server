@@ -31,7 +31,7 @@ public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler 
         AccessTokenDto accessTokenDto = authService.issueAccessToken(memberId);
         RefreshTokenDto refreshTokenDto = authService.issueRefreshToken(memberId);
 
-        String redirectUri = UriComponentsBuilder.fromUriString("medicall://auth")
+        String redirectUri = UriComponentsBuilder.fromUriString("https://avenir.my/auth-redirect")
                 .queryParam("atk", accessTokenDto.getAccessToken())
                 .queryParam("rtk", refreshTokenDto.getRefreshToken())
                 .build()
